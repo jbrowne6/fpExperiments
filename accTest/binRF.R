@@ -1,6 +1,6 @@
 library(rerf)
 
-nTimes <- 1
+nTimes <- 10
 num_trees <- 128
 numCores <- 2
 ML <- numCores

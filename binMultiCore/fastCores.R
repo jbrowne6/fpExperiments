@@ -1,8 +1,8 @@
 library(rerf)
 
 nTimes <- 1
-num_trees <- 16
-ML <- 1
+num_trees <- 128
+ML <- c(1,2,4,8,16,32,64)
 
 
 numCores <- 0
@@ -42,22 +42,25 @@ close(label_block)
 
 
 
-		for (num_trees in c(1,2,4,8,16,32,64,128)){
+for (p in ML){
+		for (binSize in seq(1:10)*500){
+			for (i in 1:nTimes){
 				gc()
 				ptm <- proc.time()
-				#		forest <- RerF(X,Y, trees=num_trees, bagging=.3, min.parent=1, max.depth=0, store.oob=TRUE, stratify=TRUE, num.cores=p, seed=sample(1:100000,1))
-				forest <- fpRerF(X =X, Y = Y, forestType="rerf",minParent=1,numTreesInForest=num_trees,numCores=1,nodeSizeToBin=600, nodeSizeBin=60)
+				forest <- fpRerF(X =X, Y = Y, forestType="rerf",minParent=1,numTreesInForest=num_trees,numCores=p,nodeSizeToBin=binSize, nodeSizeBin=binSize )
+				#forest <- fpRerF(X =X, Y = Y, forestType="rfBase",minParent=1,numTreesInForest=num_trees,numCores=p,nodeSizeToBin=binSize, nodeSizeBin=binSize )
 				ptm_hold <- (proc.time() - ptm)[3]
 
 				predictions <- fpPredict(forest, Xt)
 				error <- sum(predictions==Yt)/length(Yt)
 
-				resultData <- rbind(resultData, c("MNIST", "rerf", ptm_hold,error, 600,60,num_trees)) 
+				resultData <- rbind(resultData, c("MNIST", "rerf",p, ptm_hold,error, binSize,binSize)) 
 
 				forest$printParameters()
 				rm(forest)
-		
+			}
 		}
+}
 
 
 
@@ -68,4 +71,4 @@ resultData[,2] <- as.factor(resultData[,2])
 resultData[,3] <- as.numeric(resultData[,3])
 resultData[,4] <- as.numeric(resultData[,4])
 
-write.table(resultData, file="treeGrow.csv", col.names=FALSE, row.names=FALSE, append=TRUE, sep=",", quote=FALSE)
+write.table(resultData, file="coreGrow.csv", col.names=FALSE, row.names=FALSE, append=TRUE, sep=",", quote=FALSE)

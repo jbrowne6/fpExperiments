@@ -2,13 +2,12 @@ library(rerf)
 
 nTimes <- 1
 num_trees <- 128
-ML <- c(1,2,4,8,16,32,64)
-
-
-numCores <- 0
+numCores <- 32
+ML <- numCores
+algName <- "hello"
 time <- 0
 
-resultData <- data.frame("MNIST","binnedBaseRerF", numCores, time,time,time,time, stringsAsFactors=FALSE)
+resultData <- data.frame("MNIST",algName, numCores,time, time, time,time,time, stringsAsFactors=FALSE)
 
 
 #####################################################
@@ -39,26 +38,31 @@ Yt <- as.numeric(readBin(label_block, integer(), n=num_labels, size=1, signed=FA
 close(image_block)
 close(label_block)
 
+mtry <- as.integer(sqrt(ncol(X)))
+mtryMult <- c(1,1.5,2,2.5,3,3.5,4)
 
+for (algName in c("rerf")){
+	for (p in 8){
+		for (Vmtry in seq(1:5)*mtry){
+			for (VmtryMult in mtryMult){
+				for (i in 1:nTimes){
+					gc()
+					#		forest <- RerF(X,Y, trees=num_trees, bagging=.3, min.parent=1, max.depth=0, store.oob=TRUE, stratify=TRUE, num.cores=p, seed=sample(1:100000,1))
+					ptm <- proc.time()
+					forest <- fpRerF(X =X, Y = Y, forestType=algName,minParent=1,numTreesInForest=num_trees,numCores=p,mtry=Vmtry,mtryMult=VmtryMult)
+					ptm_hold_train <- (proc.time() - ptm)[3]
 
+					ptm <- proc.time()
+					predictions <- fpPredict(forest, Xt)
+					ptm_hold <- (proc.time() - ptm)[3]
 
-for (p in ML){
-	for (toBinSize in 3000){
-		for (binSize in 500){
-			for (i in 1:nTimes){
-				gc()
-				ptm <- proc.time()
-				#		forest <- RerF(X,Y, trees=num_trees, bagging=.3, min.parent=1, max.depth=0, store.oob=TRUE, stratify=TRUE, num.cores=p, seed=sample(1:100000,1))
-				forest <- fpRerF(X =X, Y = Y, forestType="rerf",minParent=1,numTreesInForest=num_trees,numCores=p,nodeSizeToBin=toBinSize, nodeSizeBin=binSize )
-				ptm_hold <- (proc.time() - ptm)[3]
+					error <- sum(predictions==Yt)/length(Yt)
 
-				predictions <- fpPredict(forest, Xt)
-				error <- sum(predictions==Yt)/length(Yt)
+					resultData <- rbind(resultData, c("MNIST",algName,p,ptm_hold_train,ptm_hold,error,Vmtry,VmtryMult)) 
 
-				resultData <- rbind(resultData, c("MNIST", "rerf",p, ptm_hold,error, toBinSize,binSize)) 
-
-				forest$printParameters()
-				rm(forest)
+					forest$printParameters()
+					rm(forest)
+				}
 			}
 		}
 	}
@@ -73,4 +77,4 @@ resultData[,2] <- as.factor(resultData[,2])
 resultData[,3] <- as.numeric(resultData[,3])
 resultData[,4] <- as.numeric(resultData[,4])
 
-write.table(resultData, file="coreGrow.csv", col.names=FALSE, row.names=FALSE, append=TRUE, sep=",", quote=FALSE)
+write.table(resultData, file="bench.csv", col.names=FALSE, row.names=FALSE, append=TRUE, sep=",", quote=FALSE)

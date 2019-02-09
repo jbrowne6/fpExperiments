@@ -130,3 +130,15 @@ Higgs, 411956,XGBoost,8
 Higgs, 412112,XGBoost,4
 Higgs, 411848,XGBoost,2
 Higgs, 412300,XGBoost,1
+mnist, 1797044,XGBoost,32
+mnist, 1796720,XGBoost,16
+mnist, 1797296,XGBoost,8
+mnist, 1797060,XGBoost,4
+mnist, 1796944,XGBoost,2
+mnist, 1797572,XGBoost,1
+p53, 7192492,XGBoost,32
+p53, 7192332,XGBoost,16
+p53, 7623440,XGBoost,8
+p53, 7192084,XGBoost,4
+p53, 7623444,XGBoost,2
+p53, 7623496,XGBoost,1
