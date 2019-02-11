@@ -1,7 +1,7 @@
 library(rerf)
 
 nTimes <- 10
-num_trees <- 128
+num_trees <- 64
 numCores <- 2
 ML <- numCores
 time <- 0
@@ -41,7 +41,7 @@ close(label_block)
 
 
 for (algName in c("binnedBase","binnedBaseRerF")){
-for (p in c(1,2,4,8,16,32)){
+for (p in 32){
 			for (i in 1:nTimes){
 				gc()
 				#		forest <- RerF(X,Y, trees=num_trees, bagging=.3, min.parent=1, max.depth=0, store.oob=TRUE, stratify=TRUE, num.cores=p, seed=sample(1:100000,1))

@@ -1,8 +1,8 @@
 library(xgboost)
 
 
-nTimes <- 1
-num_trees <- 128
+nTimes <- 10
+num_trees <- 64
 numCores <- 32
 ML <- numCores
 algName <- "hello"

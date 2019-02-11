@@ -6,29 +6,59 @@
 # ---
 
 library(ggplot2)
+library(plyr)
 
-leg <- theme(legend.text = element_text(size = 12), legend.title=element_blank(), plot.title = element_text(size = 16,  face="bold"), plot.subtitle = element_text(size = 12),axis.title.x = element_text(size=12), axis.text.x = element_text(size=12), axis.title.y = element_text(size=12), axis.text.y = element_text(size=12))
+data_summary <- function(data, varname, groupnames){
+	      require(plyr)
+  summary_func <- function(x, col){
+		          c(mean = median(x[[col]], na.rm=TRUE),
+								                  sd = sd(x[[col]], na.rm=TRUE))
+	    }
+	    data_sum<-ddply(data, groupnames, .fun=summary_func,
+											                                      varname)
+	    data_sum <- rename(data_sum, c("mean" = varname))
+			     return(data_sum)
+}
 
+
+leg <- theme(legend.text = element_text(size = 16), legend.title=element_text(size = 16), plot.title = element_text(size = 16,  face="bold"), plot.subtitle = element_text(size = 16),axis.title.x = element_text(size=16), axis.text.x = element_text(size=16), axis.title.y = element_text(size=16), axis.text.y = element_text(size=16))
+
+
+
+##############################################################
+##############################################################
+mydata <- read.csv(file="memUse.txt", header=FALSE, sep=",")
+colnames(mydata) <- c("Dataset","memUsed","System","NumCores")
+mydata[,2] <- as.integer(mydata[,2])/1000
+mydata <- data_summary(mydata,varname="memUsed",groupnames=c("Dataset","System","NumCores"))
+
+
+
+png(filename="MemUsed.png")
+p <- ggplot(mydata, aes(NumCores, memUsed, color=System)) + geom_line(size=1.5)
+p <- p + guides(fill = guide_legend(title="System"))
+p <- p +leg + labs(title="Multithread Effects on Memory Use", x="Number of Threads(log2)", y="Memory Used(MB)", subtitle=paste("128 trees"))
+p <- p + theme(axis.text.x = element_text(angle = 45, hjust = .5))
+p <- p + scale_x_continuous(trans="log2")
+p <- p + facet_grid(Dataset ~ ., scales="free_y")
+print(p)
+dev.off()
 
 
 mydata <- read.csv(file="bench.csv", header=FALSE, sep=",")
-colnames(mydata) <- c("Dataset", "System", "Threads", "RelativeSpeed")
-
-mydata[mydata$Dataset=="MNIST",4] <- mydata[mydata$Dataset=="MNIST",4]/mydata[mydata$Dataset=="MNIST" & mydata$System=="binnedBase" ,4]
-
-mydata[mydata$Dataset=="higgs",4] <- mydata[mydata$Dataset=="higgs",4]/mydata[mydata$Dataset=="higgs" & mydata$System=="binnedBase" ,4]
-
-mydata[mydata$Dataset=="p53",4] <- mydata[mydata$Dataset=="p53",4]/mydata[mydata$Dataset=="p53" & mydata$System=="binnedBase" ,4]
+colnames(mydata) <- c("Dataset","System","NumCores","TrainingTime")
+mydata <- data_summary(mydata,varname="TrainingTime",groupnames=c("Dataset","System","NumCores"))
 
 
-#cols <- c("Ideal"="#000000", "RerF"="#009E73", "XGBoost"="#E69F00", "Ranger"="#0072B2", "RF"="#CC79A7")
 
-png(filename="benchRF.png")
-
-p <- ggplot(mydata, aes(System, RelativeSpeed,color = System, fill=System))
-p <- p + geom_bar(stat="identity",position=position_dodge())
-p <- p +leg + labs(title="Training Times Single Core", x="", y="Relative Training Time", subtitle=paste(""))
-p <- p + theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank())
-p <- p + facet_grid(Dataset ~ ., scales = "free_y")
+png(filename="TrainingTimeUsed.png")
+p <- ggplot(mydata, aes(NumCores, TrainingTime, color=System)) + geom_line(size=1.5)
+p <- p + guides(fill = guide_legend(title="System"))
+p <- p +leg + labs(title="Multithread Effects on Training Time", x="Number of Threads(log2)", y="Training Time(s)", subtitle=paste("128 trees"))
+p <- p + theme(axis.text.x = element_text(angle = 45, hjust = .5))
+p <- p + scale_x_continuous(trans="log2")
+p <- p + scale_y_continuous(trans="log10")
+p <- p + facet_grid(Dataset ~ ., scales="free_y")
 print(p)
 dev.off()
+

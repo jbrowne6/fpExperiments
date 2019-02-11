@@ -1,7 +1,7 @@
 library(ranger)
 
 nTimes <- 10
-num_trees <- 128
+num_trees <- 64
 numCores <- 32
 ML <- numCores
 algName <- "hello"
@@ -47,12 +47,14 @@ ptm_hold <- NA
 for (i in 1:nTimes){
 	gc()
 	forest <- ranger(dependent.variable.name = as.character(ncol(X)), data = X, num.trees = num_trees, num.threads = 32, classification=TRUE)
+	for(j in c(1,2,4,8,16,32)){
 	ptm <- proc.time()
-	pred <- predict(forest,Xt)
+	pred <- predict(forest,Xt, num.threads=j)
 	ptm_hold <- (proc.time() - ptm)[3]
 	error <- mean(pred$predictions == Yt)
 
-	resultData <- rbind(resultData, c("MNIST","Ranger",1, ptm_hold,error )) 
+	resultData <- rbind(resultData, c("MNIST","Ranger",j, ptm_hold,error )) 
+	}
 }
 
 

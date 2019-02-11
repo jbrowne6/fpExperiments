@@ -1,8 +1,8 @@
 library(rerf)
 
-nTimes <- 1
-num_trees <- 128
-numCores <- 32
+nTimes <- 10
+num_trees <- 16
+numCores <- 16
 ML <- numCores
 algName <- "hello"
 time <- 0
@@ -42,7 +42,7 @@ mtry <- as.integer(sqrt(ncol(X)))
 mtryMult <- c(1,1.5,2,2.5,3,3.5,4)
 
 for (algName in c("rerf")){
-	for (p in 8){
+	for (p in 16){
 		for (Vmtry in seq(1:5)*mtry){
 			for (VmtryMult in mtryMult){
 				for (i in 1:nTimes){

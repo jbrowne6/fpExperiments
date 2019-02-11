@@ -1,29 +1,18 @@
 #!/bin/bash
 
-
-for dataset in "Higgs" "mnist" "p53"
-do
-	for numCores in 32 16 8 4 2 1
+	for algname in "rfBase" "rerf" "binnedBase" "binnedBaseRerF"
 	do
-		echo "$dataset,$var,XGBoost,$numCores"
-		var=`/usr/bin/time -v Rscript XGBoost.R $dataset $numCores 2>&1 >/dev/null | awk -F: '/Maximum resident/ {print $2}'`
-		echo "$dataset,$var,XGBoost,$numCores" >> memUse.txt
+		for dataset in "mnist" "Higgs" "p53"
+		do
+			for numCores in 1 2 4 8 16 32
+			do
+
+				var=`/usr/bin/time -v Rscript fastRF.R $algname $dataset $numCores 2>&1 >/dev/null | awk -F: '/Maximum resident/ {print $2}'`
+				echo "$dataset,$var,$algname,$numCores" >> memUse.txt
+
+			done
+		done
 	done
-done
-
-
-
-
-for dataset in "mnist" "Higgs" "p53"
-do
-	for numCores in 32 16 8 4 2 1
-	do
-		echo "$dataset,$var,R-RerF,$numCores"
-#		var=`/usr/bin/time -v Rscript RerF.R $dataset $numCores 2>&1 >/dev/null | awk -F: '/Maximum resident/ {print $2}'`
-#		echo "$dataset,$var,R-RerF,$numCores" >> memUse.txt
-
-	done
-done
 
 
 

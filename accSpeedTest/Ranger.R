@@ -1,14 +1,13 @@
-library(rerf)
+library(ranger)
 
-nTimes <- 1
-num_trees <- 16
-ML <- 1
-
-
-numCores <- 0
+nTimes <- 10
+num_trees <- 128
+numCores <- 32
+ML <- numCores
+algName <- "hello"
 time <- 0
 
-resultData <- data.frame("MNIST","binnedBaseRerF", numCores, time,time,time,time, stringsAsFactors=FALSE)
+resultData <- data.frame("MNIST",algName, numCores, time, time, stringsAsFactors=FALSE)
 
 
 #####################################################
@@ -40,26 +39,23 @@ close(image_block)
 close(label_block)
 
 
+X <- cbind(X,Y)
+colnames(X) <- as.character(1:ncol(X))
+colnames(Xt) <- as.character(1:ncol(Xt))
 
+ptm_hold <- NA
+for (i in 1:nTimes){
+	gc()
+	forest <- ranger(dependent.variable.name = as.character(ncol(X)), data = X, num.trees = num_trees, num.threads = 32, classification=TRUE)
+	for(j in c(1,2,4,8,16,32)){
+	ptm <- proc.time()
+	pred <- predict(forest,Xt, num.threads=j)
+	ptm_hold <- (proc.time() - ptm)[3]
+	error <- mean(pred$predictions == Yt)
 
-		for (num_trees in c(1,2,4,8,16,32,64,128)){
-				gc()
-				ptm <- proc.time()
-				#		forest <- RerF(X,Y, trees=num_trees, bagging=.3, min.parent=1, max.depth=0, store.oob=TRUE, stratify=TRUE, num.cores=p, seed=sample(1:100000,1))
-				forest <- fpRerF(X =X, Y = Y, forestType="rerf",minParent=1,numTreesInForest=num_trees,numCores=1,nodeSizeToBin=600, nodeSizeBin=60)
-				ptm_hold <- (proc.time() - ptm)[3]
-
-				predictions <- fpPredict(forest, Xt)
-				error <- sum(predictions==Yt)/length(Yt)
-
-				resultData <- rbind(resultData, c("MNIST", "rerf", ptm_hold,error, 600,60,num_trees)) 
-
-				forest$printParameters()
-				rm(forest)
-		
-		}
-
-
+	resultData <- rbind(resultData, c("MNIST","Ranger",j, ptm_hold,error )) 
+	}
+}
 
 
 resultData <- resultData[2:nrow(resultData),]
@@ -68,4 +64,4 @@ resultData[,2] <- as.factor(resultData[,2])
 resultData[,3] <- as.numeric(resultData[,3])
 resultData[,4] <- as.numeric(resultData[,4])
 
-write.table(resultData, file="treeGrow.csv", col.names=FALSE, row.names=FALSE, append=TRUE, sep=",", quote=FALSE)
+write.table(resultData, file="bench.csv", col.names=FALSE, row.names=FALSE, append=TRUE, sep=",", quote=FALSE)

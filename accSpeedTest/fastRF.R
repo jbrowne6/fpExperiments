@@ -1,14 +1,13 @@
 library(rerf)
 
-nTimes <- 1
+nTimes <- 10
 num_trees <- 128
-ML <- c(1,2,4,8,16,32,64)
-
-
-numCores <- 0
+numCores <- 32
+ML <- numCores
+algName <- "hello"
 time <- 0
 
-resultData <- data.frame("MNIST","binnedBaseRerF", numCores, time,time,time,time, stringsAsFactors=FALSE)
+resultData <- data.frame("MNIST",algName, numCores, time, time, stringsAsFactors=FALSE)
 
 
 #####################################################
@@ -41,25 +40,23 @@ close(label_block)
 
 
 
+for (algName in c("rfBase","rerf")){
+	for (p in 32){
+		for (i in 1:nTimes){
+			gc()
+			#		forest <- RerF(X,Y, trees=num_trees, bagging=.3, min.parent=1, max.depth=0, store.oob=TRUE, stratify=TRUE, num.cores=p, seed=sample(1:100000,1))
+			forest <- fpRerF(X =X, Y = Y, forestType=algName,minParent=1,numTreesInForest=num_trees,numCores=p)
 
-for (p in ML){
-	for (toBinSize in 3000){
-		for (binSize in 500){
-			for (i in 1:nTimes){
-				gc()
-				ptm <- proc.time()
-				#		forest <- RerF(X,Y, trees=num_trees, bagging=.3, min.parent=1, max.depth=0, store.oob=TRUE, stratify=TRUE, num.cores=p, seed=sample(1:100000,1))
-				forest <- fpRerF(X =X, Y = Y, forestType="rerf",minParent=1,numTreesInForest=num_trees,numCores=p,nodeSizeToBin=toBinSize, nodeSizeBin=binSize )
-				ptm_hold <- (proc.time() - ptm)[3]
+			ptm <- proc.time()
+			predictions <- fpPredict(forest, Xt)
+			ptm_hold <- (proc.time() - ptm)[3]
 
-				predictions <- fpPredict(forest, Xt)
-				error <- sum(predictions==Yt)/length(Yt)
+			error <- sum(predictions==Yt)/length(Yt)
 
-				resultData <- rbind(resultData, c("MNIST", "rerf",p, ptm_hold,error, toBinSize,binSize)) 
+			resultData <- rbind(resultData, c("MNIST",algName,p, ptm_hold,error )) 
 
-				forest$printParameters()
-				rm(forest)
-			}
+			forest$printParameters()
+			rm(forest)
 		}
 	}
 }
@@ -73,4 +70,4 @@ resultData[,2] <- as.factor(resultData[,2])
 resultData[,3] <- as.numeric(resultData[,3])
 resultData[,4] <- as.numeric(resultData[,4])
 
-write.table(resultData, file="coreGrow.csv", col.names=FALSE, row.names=FALSE, append=TRUE, sep=",", quote=FALSE)
+write.table(resultData, file="bench.csv", col.names=FALSE, row.names=FALSE, append=TRUE, sep=",", quote=FALSE)
