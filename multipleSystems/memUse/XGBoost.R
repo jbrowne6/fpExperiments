@@ -1,9 +1,13 @@
 args = commandArgs()
-if (length(args)!=7) {
+if (length(args)!=11) {
 	stop("At least two arguments must be supplied.")
 } else {
 	dataset = args[6]
 	numThreads = as.integer(args[7])
+nTimes = as.integer(args[8])
+nClass = as.integer(args[9])
+nSamples = as.integer(args[10])
+nfeats = as.integer(args[11])
 }
 
 library(xgboost)
@@ -34,7 +38,7 @@ if(dataset == "mnist"){
 		for (i in 1:nTimes){
 			gc()
 			ptm <- proc.time()
-			forest <- xgboost(data=X, label=Y, objective="multi:softprob",nrounds=num_trees, num_class=num_classes, nthread=p)
+			forest <- xgboost(data=X, label=Y, objective="multi:softmax",nrounds=num_trees,colsample_bynode=ceiling(sqrt(ncol(X))), num_class=num_classes, nthread=p)
 			ptm_hold <- (proc.time() - ptm)[3]
 			resultData <- rbind(resultData, c("MNIST", "XGBoost",p, ptm_hold)) 
 		}
@@ -55,7 +59,7 @@ if(dataset == "Higgs"){
 		for (i in 1:nTimes){
 			gc()
 			ptm <- proc.time()
-			forest <- xgboost(data=X, label=Y, objective="multi:softprob",nrounds=num_trees, num_class=num_classes, nthread=p)
+			forest <- xgboost(data=X, label=Y, objective="multi:softmax",nrounds=num_trees,colsample_bynode=ceiling(sqrt(ncol(X))), num_class=num_classes, nthread=p)
 			ptm_hold <- (proc.time() - ptm)[3]
 			resultData <- rbind(resultData, c("higgs", "XGBoost",p, ptm_hold)) 
 		}
@@ -78,7 +82,7 @@ if(dataset == "p53"){
 		for (i in 1:nTimes){
 			gc()
 			ptm <- proc.time()
-			forest <- xgboost(data=X, label=Y, objective="multi:softprob",nrounds=num_trees, num_class=num_classes, nthread=p)
+			forest <- xgboost(data=X, label=Y, objective="multi:softmax",nrounds=num_trees,colsample_bynode=ceiling(sqrt(ncol(X))), num_class=num_classes, nthread=p)
 			ptm_hold <- (proc.time() - ptm)[3]
 			resultData <- rbind(resultData, c("p53", "XGBoost",p, ptm_hold)) 
 		}
@@ -86,6 +90,32 @@ if(dataset == "p53"){
 
 
 }
+
+
+
+if(dataset == "svhn"){
+	####################################################
+	##########             svhn 
+	####################################################
+	X <- as.matrix(read.csv(file="temp_data.csv", header=FALSE, sep=","))
+	Y <- read.csv(file="temp_label.csv", header=FALSE, sep=",")$V1
+	num_classes <- length(unique(Y))
+
+	gc()
+	for (p in ML){
+		for (i in 1:nTimes){
+			gc()
+			ptm <- proc.time()
+			forest <- xgboost(data=X, label=Y, objective="multi:softmax",nrounds=num_trees,colsample_bynode=ceiling(sqrt(ncol(X))), num_class=num_classes, nthread=p)
+			ptm_hold <- (proc.time() - ptm)[3]
+			resultData <- rbind(resultData, c(dataset, algName,p, ptm_hold),nClass,nSamples,nfeats)  
+			rm(forest)
+		}
+	}
+}
+
+
+
 
 resultData <- resultData[2:nrow(resultData),]
 resultData[,1] <- as.factor(resultData[,1])

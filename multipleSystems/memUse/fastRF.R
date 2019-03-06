@@ -1,11 +1,14 @@
 args = commandArgs()
-if (length(args)!=9) {
+if (length(args)!=12) {
 	  stop("At least two arguments must be supplied.")
 } else {
 algName = args[6]
 dataset = args[7]
 numCores = as.integer(args[8])
 nTimes = as.integer(args[9])
+nClass = as.integer(args[10])
+nSamples = as.integer(args[11])
+nfeats = as.integer(args[12])
 }
 
 library(rerf)
@@ -18,7 +21,7 @@ ML <- numCores
 numCores <- 0
 time <- 0
 
-resultData <- data.frame(as.character(dataset), algorithm, numCores, time, stringsAsFactors=FALSE)
+resultData <- data.frame(as.character(dataset), algorithm, numCores, time,time,time,time, stringsAsFactors=FALSE)
 
 
 if(dataset == "mnist"){
@@ -92,21 +95,19 @@ if(dataset == "p53"){
 
 if(dataset == "svhn"){
 	####################################################
-	##########             P53 
+	##########             svhn 
 	####################################################
-	X <- read.csv(file="../../res/svhn_training_data_small.csv", header=FALSE, sep=",")
-	Y <- read.csv(file="../../res/svhn_training_label.csv", header=FALSE, sep=",")-1
-
+	X <- as.matrix(read.csv(file="temp_data.csv", header=FALSE, sep=","))
+	Y <- read.csv(file="temp_label.csv", header=FALSE, sep=",")$V1
 
 	gc()
-
 	for (p in ML){
 		for (i in 1:nTimes){
 			gc()
 			ptm <- proc.time()
 			forest <- fpRerF(X =X, Y = Y, forestType=algName,minParent=1,numTreesInForest=num_trees,numCores=p)
 			ptm_hold <- (proc.time() - ptm)[3]
-			resultData <- rbind(resultData, c(dataset, algName,p, ptm_hold))  
+			resultData <- rbind(resultData, c(dataset, algName,p, ptm_hold),nClass,nSamples,nfeats)  
 			rm(forest)
 		}
 	}

@@ -1,9 +1,13 @@
 args = commandArgs()
-if (length(args)!=7) {
+if (length(args)!=11) {
 	stop("At least two arguments must be supplied.")
 } else {
 	dataset = args[6]
 	numThreads = as.integer(args[7])
+nTimes = as.integer(args[8])
+nClass = as.integer(args[9])
+nSamples = as.integer(args[10])
+nfeats = as.integer(args[11])
 }
 
 library(ranger)
@@ -76,6 +80,30 @@ if(dataset=="p53"){
 			forest <- ranger(dependent.variable.name = as.character(ncol(X)), data = X, num.trees = num_trees, num.threads = p, classification=TRUE)
 			ptm_hold <- (proc.time() - ptm)[3]
 			resultData <- rbind(resultData, c("p53", "Ranger",p, ptm_hold)) 
+		}
+	}
+}
+
+
+if(dataset == "svhn"){
+	####################################################
+	##########             svhn 
+	####################################################
+	X <- as.matrix(read.csv(file="temp_data.csv", header=FALSE, sep=","))
+	Y <- read.csv(file="temp_label.csv", header=FALSE, sep=",")$V1
+	X <- cbind(X,Y)
+	colnames(X) <- as.character(1:ncol(X))
+	rm(Y)
+
+	gc()
+	for (p in ML){
+		for (i in 1:nTimes){
+			gc()
+			ptm <- proc.time()
+			forest <- ranger(dependent.variable.name = as.character(ncol(X)), data = X, num.trees = num_trees, num.threads = p, classification=TRUE)
+			ptm_hold <- (proc.time() - ptm)[3]
+			resultData <- rbind(resultData, c(dataset, algName,p, ptm_hold),nClass,nSamples,nfeats)  
+			rm(forest)
 		}
 	}
 }

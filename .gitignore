@@ -44,6 +44,7 @@ vignettes/*.pdf
 # files created during packing
 *.out
 *.swp
+*.csv
 
 .Rproj.user
 

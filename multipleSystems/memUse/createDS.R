@@ -10,7 +10,8 @@ if (length(args)!=8) {
 
 make_data <- function(numClass=5, numSamples=60000, feats=1024){
 	X <- as.matrix(read.csv(file = "../../res/streetview/svhn_training_data.csv", header=FALSE,sep=","))
-	Y <- read.csv(file = "../../res/streetview/svhn_training_label.csv", header=FALSE,sep=",")
+	Y <- read.csv(file = "../../res/streetview/svhn_training_label.csv", header=FALSE,sep=",")$V1
+	
 
 	classPriority <- c(8,9,6,7,10,5,4,3,2,1)
 	classToUse <- classPriority[1:numClass]
@@ -24,7 +25,7 @@ make_data <- function(numClass=5, numSamples=60000, feats=1024){
 	subX <- sample(1:sampLength, numSamples, replace=FALSE)
 
 	X <- X[subX,]
-	Y <- Y[subX,]
+	Y <- as.numeric(as.factor(Y[subX]))-1
 
 	write.table(X, "temp_data.csv", sep=",", row.names=FALSE, col.names=FALSE)
 	write.table(Y, "temp_label.csv", sep=",", row.names=FALSE, col.names=FALSE)
