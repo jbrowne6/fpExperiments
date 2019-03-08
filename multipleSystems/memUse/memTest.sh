@@ -1,6 +1,6 @@
 #!/bin/bash
 
-nTimes=1
+nTimes=3
 #start with varying cores
 echo "writing file"
 Rscript createDS.R -1 -1 -1
@@ -11,7 +11,7 @@ nSample=60000
 nFeature=1024
 nClass=5
 
-
+testName="cores"
 for algname in "rfBase" "rerf" "binnedBase" "binnedBaseRerF"
 do
 	for dataset in "svhn"
@@ -20,7 +20,7 @@ do
 		do
 
 			var=`/usr/bin/time -v Rscript fastRF.R $algname $dataset $numCores $nTimes $nClass $nSample $nFeature 2>&1 >/dev/null | awk -F: '/Maximum resident/ {print $2}'`
-			echo "$dataset,$var,$algname,$numCores,$nClass,$nSample,$nFeature" >> memUse.txt
+			echo "$dataset,$var,$testname,$algname,$numCores,$nClass,$nSample,$nFeature" >> memUse.txt
 
 		done
 	done
@@ -33,7 +33,7 @@ do
 	do
 
 		var=`/usr/bin/time -v Rscript XGBoost.R $dataset $numCores $nTimes $nClass $nSample $nFeature 2>&1 >/dev/null | awk -F: '/Maximum resident/ {print $2}'`
-		echo "$dataset,$var,XGBoost,$numCores,$nClass,$nSample,$nFeature" >> memUse.txt
+		echo "$dataset,$var,$testname,XGBoost,$numCores,$nClass,$nSample,$nFeature" >> memUse.txt
 
 	done
 done
@@ -45,7 +45,7 @@ do
 	do
 
 		var=`/usr/bin/time -v Rscript Ranger.R $dataset $numCores $nTimes $nClass $nSample $nFeature 2>&1 >/dev/null | awk -F: '/Maximum resident/ {print $2}'`
-		echo "$dataset,$var,Ranger,$numCores,$nClass,$nSample,$nFeature" >> memUse.txt
+		echo "$dataset,$var,$testname,Ranger,$numCores,$nClass,$nSample,$nFeature" >> memUse.txt
 
 	done
 done
@@ -59,7 +59,7 @@ then
 		do
 
 			var=`/usr/bin/time -v Rscript RerF.R $dataset $numCores $nTimes $nClass $nSample $nFeature 2>&1 >/dev/null | awk -F: '/Maximum resident/ {print $2}'`
-			echo "$dataset,$var,R-RerF,$numCores,$nClass,$nSample,$nFeature" >> memUse.txt
+			echo "$dataset,$var,$testname,R-RerF,$numCores,$nClass,$nSample,$nFeature" >> memUse.txt
 
 		done
 	done
@@ -69,6 +69,7 @@ fi
 
 
 
+testName="classes"
 for nClass in 2 3 4 5 6 7 8 9 10
 do
 	echo "writing file"
@@ -85,7 +86,7 @@ do
 			do
 
 				var=`/usr/bin/time -v Rscript fastRF.R $algname $dataset $numCores $nTimes $nClass $nSample $nFeature 2>&1 >/dev/null | awk -F: '/Maximum resident/ {print $2}'`
-				echo "$dataset,$var,$algname,$numCores,$nClass,$nSample,$nFeature" >> memUse.txt
+				echo "$dataset,$var,$testname,$algname,$numCores,$nClass,$nSample,$nFeature" >> memUse.txt
 
 			done
 		done
@@ -98,7 +99,7 @@ do
 		do
 
 			var=`/usr/bin/time -v Rscript XGBoost.R $dataset $numCores $nTimes $nClass $nSample $nFeature 2>&1 >/dev/null | awk -F: '/Maximum resident/ {print $2}'`
-			echo "$dataset,$var,XGBoost,$numCores,$nClass,$nSample,$nFeature" >> memUse.txt
+			echo "$dataset,$var,$testname,XGBoost,$numCores,$nClass,$nSample,$nFeature" >> memUse.txt
 
 		done
 	done
@@ -110,7 +111,7 @@ do
 		do
 
 			var=`/usr/bin/time -v Rscript Ranger.R $dataset $numCores $nTimes $nClass $nSample $nFeature 2>&1 >/dev/null | awk -F: '/Maximum resident/ {print $2}'`
-			echo "$dataset,$var,Ranger,$numCores,$nClass,$nSample,$nFeature" >> memUse.txt
+			echo "$dataset,$var,$testname,Ranger,$numCores,$nClass,$nSample,$nFeature" >> memUse.txt
 
 		done
 	done
@@ -124,7 +125,7 @@ do
 			do
 
 				var=`/usr/bin/time -v Rscript RerF.R $dataset $numCores $nTimes $nClass $nSample $nFeature 2>&1 >/dev/null | awk -F: '/Maximum resident/ {print $2}'`
-				echo "$dataset,$var,R-RerF,$numCores,$nClass,$nSample,$nFeature" >> memUse.txt
+				echo "$dataset,$var,$testname,R-RerF,$numCores,$nClass,$nSample,$nFeature" >> memUse.txt
 
 			done
 		done
@@ -134,7 +135,8 @@ done
 
 
 
-for nSample in 30000 60000 90000 120000 150000 180000 210000
+testName="observations"
+for nSample in 30000 60000 90000 120000 150000 180000
 do
 	echo "writing file"
 	Rscript createDS.R -1 $nSample -1
@@ -150,7 +152,7 @@ do
 			do
 
 				var=`/usr/bin/time -v Rscript fastRF.R $algname $dataset $numCores $nTimes $nClass $nSample $nFeature 2>&1 >/dev/null | awk -F: '/Maximum resident/ {print $2}'`
-				echo "$dataset,$var,$algname,$numCores,$nClass,$nSample,$nFeature" >> memUse.txt
+				echo "$dataset,$var,$testname,$algname,$numCores,$nClass,$nSample,$nFeature" >> memUse.txt
 
 			done
 		done
@@ -163,7 +165,7 @@ do
 		do
 
 			var=`/usr/bin/time -v Rscript XGBoost.R $dataset $numCores $nTimes $nClass $nSample $nFeature 2>&1 >/dev/null | awk -F: '/Maximum resident/ {print $2}'`
-			echo "$dataset,$var,XGBoost,$numCores,$nClass,$nSample,$nFeature" >> memUse.txt
+			echo "$dataset,$var,$testname,XGBoost,$numCores,$nClass,$nSample,$nFeature" >> memUse.txt
 
 		done
 	done
@@ -175,7 +177,7 @@ do
 		do
 
 			var=`/usr/bin/time -v Rscript Ranger.R $dataset $numCores $nTimes $nClass $nSample $nFeature 2>&1 >/dev/null | awk -F: '/Maximum resident/ {print $2}'`
-			echo "$dataset,$var,Ranger,$numCores,$nClass,$nSample,$nFeature" >> memUse.txt
+			echo "$dataset,$var,$testname,Ranger,$numCores,$nClass,$nSample,$nFeature" >> memUse.txt
 
 		done
 	done
@@ -189,7 +191,7 @@ do
 			do
 
 				var=`/usr/bin/time -v Rscript RerF.R $dataset $numCores $nTimes $nClass $nSample $nFeature 2>&1 >/dev/null | awk -F: '/Maximum resident/ {print $2}'`
-				echo "$dataset,$var,R-RerF,$numCores,$nClass,$nSample,$nFeature" >> memUse.txt
+				echo "$dataset,$var,$testname,R-RerF,$numCores,$nClass,$nSample,$nFeature" >> memUse.txt
 
 			done
 		done
@@ -199,6 +201,7 @@ done
 
 
 
+testName="features"
 for nFeature in 250 500 1000 1500 2250 3072
 do
 	echo "writing file"
@@ -215,7 +218,7 @@ do
 			do
 
 				var=`/usr/bin/time -v Rscript fastRF.R $algname $dataset $numCores $nTimes $nClass $nSample $nFeature 2>&1 >/dev/null | awk -F: '/Maximum resident/ {print $2}'`
-				echo "$dataset,$var,$algname,$numCores,$nClass,$nSample,$nFeature" >> memUse.txt
+				echo "$dataset,$var,$testname,$algname,$numCores,$nClass,$nSample,$nFeature" >> memUse.txt
 
 			done
 		done
@@ -228,7 +231,7 @@ do
 		do
 
 			var=`/usr/bin/time -v Rscript XGBoost.R $dataset $numCores $nTimes $nClass $nSample $nFeature 2>&1 >/dev/null | awk -F: '/Maximum resident/ {print $2}'`
-			echo "$dataset,$var,XGBoost,$numCores,$nClass,$nSample,$nFeature" >> memUse.txt
+			echo "$dataset,$var,$testname,XGBoost,$numCores,$nClass,$nSample,$nFeature" >> memUse.txt
 
 		done
 	done
@@ -240,7 +243,7 @@ do
 		do
 
 			var=`/usr/bin/time -v Rscript Ranger.R $dataset $numCores $nTimes $nClass $nSample $nFeature 2>&1 >/dev/null | awk -F: '/Maximum resident/ {print $2}'`
-			echo "$dataset,$var,Ranger,$numCores,$nClass,$nSample,$nFeature" >> memUse.txt
+			echo "$dataset,$var,$testname,Ranger,$numCores,$nClass,$nSample,$nFeature" >> memUse.txt
 
 		done
 	done
@@ -254,11 +257,9 @@ do
 			do
 
 				var=`/usr/bin/time -v Rscript RerF.R $dataset $numCores $nTimes $nClass $nSample $nFeature 2>&1 >/dev/null | awk -F: '/Maximum resident/ {print $2}'`
-				echo "$dataset,$var,R-RerF,$numCores,$nClass,$nSample,$nFeature" >> memUse.txt
+				echo "$dataset,$var,$testname,R-RerF,$numCores,$nClass,$nSample,$nFeature" >> memUse.txt
 
 			done
 		done
 	fi
-
-
 done

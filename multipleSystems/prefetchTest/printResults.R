@@ -22,43 +22,29 @@ data_summary <- function(data, varname, groupnames){
 
 
 leg <- theme(legend.text = element_text(size = 16), legend.title=element_text(size = 16), plot.title = element_text(size = 16,  face="bold"), plot.subtitle = element_text(size = 16),axis.title.x = element_text(size=16), axis.text.x = element_text(size=16), axis.title.y = element_text(size=16), axis.text.y = element_text(size=16))
+#leg <- theme(legend.text = element_text(size = 16), legend.title=element_blank(), plot.title = element_text(size = 16,  face="bold"), plot.subtitle = element_text(size = 16),axis.title.x = element_text(size=16), axis.text.x = element_text(size=16), axis.title.y = element_text(size=16), axis.text.y = element_text(size=16))
+
 
 
 
 ##############################################################
 ##############################################################
-mydata <- read.csv(file="memUse.txt", header=FALSE, sep=",")
-colnames(mydata) <- c("Dataset","memUsed","System","NumCores")
-mydata[,2] <- as.integer(mydata[,2])/1000
-mydata <- data_summary(mydata,varname="memUsed",groupnames=c("Dataset","System","NumCores"))
-
-
-
-png(filename="MemUsed.png")
-p <- ggplot(mydata, aes(NumCores, memUsed, color=System)) + geom_line(size=1.5)
-p <- p + guides(fill = guide_legend(title="System"))
-p <- p +leg + labs(title="Multithread Effects on Memory Use", x="Number of Threads(log2)", y="Memory Used(MB)", subtitle=paste("128 trees"))
-p <- p + theme(axis.text.x = element_text(angle = 45, hjust = .5))
-p <- p + scale_x_continuous(trans="log2")
-p <- p + facet_grid(Dataset ~ ., scales="free_y")
-print(p)
-dev.off()
-
-
 mydata <- read.csv(file="bench.csv", header=FALSE, sep=",")
-colnames(mydata) <- c("Dataset","System","NumCores","TrainingTime")
-mydata <- data_summary(mydata,varname="TrainingTime",groupnames=c("Dataset","System","NumCores"))
+colnames(mydata) <- c("Dataset", "System","numCores","TrainingTime","prefetchSize","preFlag")
+
+mydata <- data_summary(mydata,varname="TrainingTime",groupnames=c("Dataset","System","prefetchSize"))
+mydata <- mydata[mydata$prefetchSize < 1000,]
+mydata[,2] <- revalue(mydata[,2], c("binnedBase"="RF", "binnedBaseRerF"="RerF"))
 
 
 
-png(filename="TrainingTimeUsed.png")
-p <- ggplot(mydata, aes(NumCores, TrainingTime, color=System)) + geom_line(size=1.5)
+png(filename="prefetch.png")
+p <- ggplot(mydata, aes(prefetchSize, TrainingTime, color=System)) + geom_line()
 p <- p + guides(fill = guide_legend(title="System"))
-p <- p +leg + labs(title="Multithread Effects on Training Time", x="Number of Threads(log2)", y="Training Time(s)", subtitle=paste("128 trees"))
-p <- p + theme(axis.text.x = element_text(angle = 45, hjust = .5))
-p <- p + scale_x_continuous(trans="log2")
-p <- p + scale_y_continuous(trans="log10")
-p <- p + facet_grid(Dataset ~ ., scales="free_y")
+p <- p +leg + labs(title="Prefetching Distance Effects on Training Time", x="Prefetch Distance", y="Training Time", subtitle=paste("SVHN, N=60000, d=1024, C=5"))
+p <- p + expand_limits(x = 0, y = 0)
+#p <- p + theme(axis.text.x = element_text(angle = 45, hjust = .5))
+#p <- p + scale_x_continuous(trans="log2")
+#p <- p + facet_grid(System ~ .)
 print(p)
 dev.off()
-
