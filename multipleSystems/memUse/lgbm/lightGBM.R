@@ -10,14 +10,14 @@ nSamples = as.integer(args[10])
 nfeats = as.integer(args[11])
 }
 
-library(xgboost)
+library(lightgbm)
 
 nTimes <- 1
 
 num_trees <- 128
 ML <- numThreads
 
-algorithm <- "XGBoost"
+algorithm <- "lightGBM"
 numCores <- 0
 time <- 0
 
@@ -97,16 +97,16 @@ if(dataset == "svhn"){
 	####################################################
 	##########             svhn 
 	####################################################
-	X <- as.matrix(read.csv(file="temp_data.csv", header=FALSE, sep=","))
-	Y <- read.csv(file="temp_label.csv", header=FALSE, sep=",")$V1
-	num_classes <- length(unique(Y))
+	dtrain <- lgb.Dataset(data=as.matrix(read.csv(file="temp_data.csv", header=FALSE, sep=",")),
+												label=read.csv(file="temp_label.csv", header=FALSE, sep=",")$V1)
+	num_classes <- length(unique(read.csv(file="temp_label.csv", header=FALSE, sep=",")$V1))
 
 	gc()
 	for (p in ML){
 		for (i in 1:nTimes){
 			gc()
 			ptm <- proc.time()
-			forest <- xgboost(data=X, label=Y, objective="multi:softmax",nrounds=num_trees,colsample_bynode=ceiling(sqrt(ncol(X))), num_class=num_classes, nthread=p)
+			forest <- lgb.train(data=dtrain, objective="multiclass",nrounds=num_trees, num_class=num_classes, nthread=p)
 			ptm_hold <- (proc.time() - ptm)[3]
 			resultData <- rbind(resultData, c(dataset, algName,p, ptm_hold),nClass,nSamples,nfeats)  
 			rm(forest)

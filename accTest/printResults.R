@@ -18,7 +18,7 @@ leg <- theme(legend.text = element_text(size = 16), legend.title=element_text(si
 #leg <- theme(legend.text = element_text(size = 16), legend.title=element_blank(), plot.title = element_text(size = 16,  face="bold"), plot.subtitle = element_text(size = 16),axis.title.x = element_text(size=16), axis.text.x = element_text(size=16), axis.title.y = element_text(size=16), axis.text.y = element_text(size=16))
 
 
-mydata <- read.csv(file="bench.csv", header=FALSE, sep=",")
+mydata <- read.csv(file="bench.csv.old", header=FALSE, sep=",")
 colnames(mydata) <- c("Dataset", "System", "Threads","TestingTime","error")
 ymin <- min(mydata[,5])-.005
 ymax <- max(mydata[,5])+.005
@@ -28,7 +28,7 @@ mydata <- data_summary(mydata,varname="error",groupnames=c("Dataset","System"))
 png(filename="accAll.png")
 p <- ggplot(mydata, aes(x=System,y=error,fill=System)) + geom_bar(position=position_dodge(),stat="identity")
 p <- p + geom_errorbar(aes(ymin=error-sd, ymax=error+sd))
-p <- p + guides(fill = guide_legend(title="Ratio\nCorrect"))
+p <- p + guides(fill = guide_legend(title=""))
 p <- p + leg + labs(title="Accuracy of Various Systems", x="", y="Ratio Correct", subtitle=paste("MNIST, 64 trees"))
 #p <- p + theme(axis.text.x = element_text(angle = 45, hjust = .5))
 #p <- p + ylim(ymin, ymax)

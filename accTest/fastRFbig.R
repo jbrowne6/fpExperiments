@@ -1,4 +1,4 @@
-library(ranger)
+library(rerf)
 
 nTimes <- 10
 num_trees <- 64
@@ -39,23 +39,29 @@ close(image_block)
 close(label_block)
 
 
-X <- cbind(X,Y)
-colnames(X) <- as.character(1:ncol(X))
-colnames(Xt) <- as.character(1:ncol(Xt))
 
-ptm_hold <- NA
-for (i in 1:nTimes){
-	gc()
-	forest <- ranger(dependent.variable.name = as.character(ncol(X)), data = X, num.trees = num_trees, num.threads = 32, classification=TRUE)
-	for(j in c(32)){
-	ptm <- proc.time()
-	pred <- predict(forest,Xt, num.threads=j)
-	ptm_hold <- (proc.time() - ptm)[3]
-	error <- mean(pred$predictions == Yt)
+for (algName in c("rerf")){
+	for (p in 32){
+		for (i in 1:nTimes){
+			gc()
+			#		forest <- RerF(X,Y, trees=num_trees, bagging=.3, min.parent=1, max.depth=0, store.oob=TRUE, stratify=TRUE, num.cores=p, seed=sample(1:100000,1))
+			forest <- fpRerF(X =X, Y = Y, forestType=algName,minParent=1,mtry=.5*nrow(X),mtryMult=1.5,numTreesInForest=num_trees,numCores=p)
 
-	resultData <- rbind(resultData, c("MNIST","Ranger",j, ptm_hold,error )) 
+			ptm <- proc.time()
+			predictions <- fpPredict(forest, Xt)
+			ptm_hold <- (proc.time() - ptm)[3]
+
+			error <- sum(predictions==Yt)/length(Yt)
+
+			resultData <- rbind(resultData, c("MNIST","rerf+",p, ptm_hold,error )) 
+
+			forest$printParameters()
+			rm(forest)
+		}
 	}
 }
+
+
 
 
 resultData <- resultData[2:nrow(resultData),]

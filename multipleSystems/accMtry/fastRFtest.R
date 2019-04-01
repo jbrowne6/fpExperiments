@@ -1,32 +1,30 @@
-library(ranger)
+library(rerf)
 
-nTimes <- 10
-num_trees <- 64
-numCores <- 32
+nTimes <- 3
+num_trees <- 16
+numCores <- 16
 ML <- numCores
 algName <- "hello"
 time <- 0
 
-resultData <- data.frame("MNIST",algName, numCores, time, time, stringsAsFactors=FALSE)
+resultData <- data.frame("MNIST",algName, numCores,time,time, time, time, stringsAsFactors=FALSE)
 
 
 #####################################################
 #########                MNIST
 #####################################################
-X <- read.csv(file="../res/mnist.csv", header=FALSE, sep=",")
+X <- read.csv(file="../../res/mnist.csv", header=FALSE, sep=",")
 Y <- X[,1]
 X <- X[, (2:785)]
 
-
-
-image_block <- file("../res/t10k-images-idx3-ubyte", "rb")
+image_block <- file("../../res/t10k-images-idx3-ubyte", "rb")
 q <- readBin(image_block, integer(), n=1, endian="big")
 num_images <- readBin(image_block, integer(), n=1, endian="big")
 num_col <- readBin(image_block, integer(), n=1, endian="big")
 num_row <- readBin(image_block, integer(), n=1, endian="big")
 
 #Open and position the label file
-label_block = file("../res/t10k-labels-idx1-ubyte", "rb")
+label_block = file("../../res/t10k-labels-idx1-ubyte", "rb")
 q <- readBin(label_block, integer(), n=1, endian="big")
 num_labels <- readBin(label_block, integer(), n=1, endian="big")
 
@@ -39,23 +37,36 @@ close(image_block)
 close(label_block)
 
 
-X <- cbind(X,Y)
-colnames(X) <- as.character(1:ncol(X))
-colnames(Xt) <- as.character(1:ncol(Xt))
 
-ptm_hold <- NA
-for (i in 1:nTimes){
-	gc()
-	forest <- ranger(dependent.variable.name = as.character(ncol(X)), data = X, num.trees = num_trees, num.threads = 32, classification=TRUE)
-	for(j in c(32)){
-	ptm <- proc.time()
-	pred <- predict(forest,Xt, num.threads=j)
-	ptm_hold <- (proc.time() - ptm)[3]
-	error <- mean(pred$predictions == Yt)
+mtry <- as.integer(sqrt(ncol(X)))
+mtryMult <- c(1,1.5,2,2.5,3,3.5,4)
 
-	resultData <- rbind(resultData, c("MNIST","Ranger",j, ptm_hold,error )) 
+for (algName in c("binnedBase", "binnedBaseRerF")){
+	for (p in 32){
+		for (numTrees in c(512)){
+				for (i in 1:nTimes){
+					gc()
+					#		forest <- RerF(X,Y, trees=num_trees, bagging=.3, min.parent=1, max.depth=0, store.oob=TRUE, stratify=TRUE, num.cores=p, seed=sample(1:100000,1))
+					ptm <- proc.time()
+					forest <- fpRerF(X =X, Y = Y, forestType=algName,minParent=1,numTreesInForest=numTrees,numCores=p)
+					ptm_hold_train <- (proc.time() - ptm)[3]
+
+					ptm <- proc.time()
+					predictions <- fpPredict(forest, Xt)
+					ptm_hold <- (proc.time() - ptm)[3]
+
+					error <- sum(predictions==Yt)/length(Yt)
+
+					resultData <- rbind(resultData, c("MNIST",algName,p,ptm_hold_train,ptm_hold,error,numTrees)) 
+
+					forest$printParameters()
+					rm(forest)
+				}
+			}
+		}
 	}
-}
+
+
 
 
 resultData <- resultData[2:nrow(resultData),]

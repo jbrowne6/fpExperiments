@@ -30,22 +30,16 @@ leg <- theme(legend.text = element_text(size = 16), legend.title=element_text(si
 ##############################################################
 ##############################################################
 mydata <- read.csv(file="bench.csv", header=FALSE, sep=",")
-colnames(mydata) <- c("Dataset", "System","numCores","TrainingTime","prefetchSize","preFlag")
+colnames(mydata) <- c("Dataset", "System","numCores","TrainingTime","TestingTime","Accuracy", "NumTrees")
 
-mydata <- data_summary(mydata,varname="TrainingTime",groupnames=c("Dataset","System","prefetchSize"))
-mydata <- mydata[mydata$prefetchSize < 1000,]
+#mydata <- data_summary(mydata,varname="TrainingTime",groupnames=c("Dataset","System","numCores","NumTrees"))
 mydata[,2] <- revalue(mydata[,2], c("binnedBase"="RF", "binnedBaseRerF"="RerF"))
 
 
 
 #png(filename="prefetch.png")
-p <- ggplot(mydata, aes(prefetchSize, TrainingTime, color=System)) + geom_line(size=1.5)
+p <- ggplot(mydata, aes(TrainingTime,Accuracy, color=System)) + geom_line(size=1.5)
 p <- p + guides(fill = guide_legend(title="System"))
-p <- p +leg + labs(title="Prefetching Distance Effects on Training Time", x="Prefetch Distance", y="Training Time", subtitle=paste("SVHN, 128 trees, 32 Threads, 5 Classes,\n60000 Observations, 1024 Features"))
+p <- p +leg + labs(title="Accuracy Vs Training Time", x="Training Time (s)", y="Accuracy", subtitle=paste("MNIST, 1 Thread, 10 Classes,\n60000 Observations, 784 Features"))
 p <- p + expand_limits(x = 0, y = 0)
-ggsave("prefetch.pdf")
-#p <- p + theme(axis.text.x = element_text(angle = 45, hjust = .5))
-#p <- p + scale_x_continuous(trans="log2")
-#p <- p + facet_grid(System ~ .)
-#print(p)
-#dev.off()
+ggsave("accVtime.pdf")

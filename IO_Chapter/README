@@ -1,0 +1,29 @@
+Tests for IO
+
+1.  First compare against Brieman on small datasets using the same settings.
+We expect to show that error bars are the same.  Use iris,breast cancer, and chess 
+================================================
+
+2.  Do speed comparison on three datasets against Ranger and XGBoost:.
+I expect to be faster in most situations, and competitive otherwise.
+
+================================================
+3.  The motivation for a fast RerF is to increase p to 2d.  This isn't feasible for many datasets.  But We can show how training time increases with p.
+I expect it to be linear.
+
+4.  Do scale-up comparisons against Ranger and XGBoost.
+I expect to scale better.
+
+5.  Surely you had to use more memory to make this gain.
+Show max memory used by each algorithm.
+I expect to be lower.
+
+6.  Now for the cheating method.  Show how cheating effects training time on data sets.
+I expect the bin to work much faster.  Particularly on large N datasets.
+
+7.  Great.  Its faster.  But what about accuracy on our three datasets?
+Show accuracy as bin size decreases from 100% of N down to 5% of N.
+Hopefully this shows only a slight decrease in accuracy.
+
+8.  Does this help us use a higher p for increased accuracy?
+It might.  Show linear speed up with increased p.

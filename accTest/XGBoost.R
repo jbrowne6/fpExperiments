@@ -45,7 +45,7 @@ X <- apply(X,2,as.numeric)
 ptm_hold <- NA
 for (i in 1:nTimes){
 	gc()
-	forest <- xgboost(data=X, label=Y, objective="multi:softprob", nrounds=num_trees,num_class=num_classes, nthread=32)
+	forest <- xgboost(data=X, label=Y, objective="multi:softprob", colsample_bynode=sqrt(nrow(X))/nrow(X), nrounds=num_trees,num_class=num_classes, nthread=32)
 	testS <- apply(Xt,2,as.numeric)
 
 	ptm <- proc.time()

@@ -1,10 +1,10 @@
 library(rerf)
 
-nTimes <- 10
+nTimes <- 1
 
-num_trees <- 128
-ML <- c(1)
-#ML <- c(1,2,4,8,16,32,48)
+num_trees <- 96
+#ML <- c(32,48)
+ML <- c(1,2,4,8,16,32,48)
 
 dataset <- "temp"
 algorithm <- "temp"
@@ -13,12 +13,12 @@ time <- 0
 
 resultData <- data.frame(as.character(dataset), algorithm, numCores, time, stringsAsFactors=FALSE)
 
-for(algName in c("rfBase","rerf","inPlace","inPlaceRerF","binnedBase","binnedBaseRerF")){
+for(algName in c("rfBase","rerf")){
 
 	#####################################################
 	#########                MNIST
 	#####################################################
-	X <- read.csv(file="../res/mnist.csv", header=FALSE, sep=",")
+	X <- read.csv(file="../../res/mnist.csv", header=FALSE, sep=",")
 	Y <- X[,1]
 	X <- X[, (2:785)]
 
@@ -40,7 +40,7 @@ for(algName in c("rfBase","rerf","inPlace","inPlaceRerF","binnedBase","binnedBas
 	####################################################
 	##########              HIGGS1
 	####################################################
-	X <- read.csv(file="../res/higgsData.csv", header=FALSE, sep=",")
+	X <- read.csv(file="../../res/higgsData.csv", header=FALSE, sep=",")
 	Y <- as.integer(X[,1]-1)
 	X <- X[, c(2:32)]
 
@@ -59,7 +59,7 @@ for(algName in c("rfBase","rerf","inPlace","inPlaceRerF","binnedBase","binnedBas
 	####################################################
 	##########             P53 
 	####################################################
-	X <- read.csv(file="../res/p53.csv", header=TRUE, sep=",")
+	X <- read.csv(file="../../res/p53.csv", header=TRUE, sep=",")
 	Y <- as.integer(X[,ncol(X)]-1)
 	X <- as.matrix(X[,1:(ncol(X)-1)])
 

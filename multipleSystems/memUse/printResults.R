@@ -28,27 +28,32 @@ leg <- theme(legend.text = element_text(size = 16), legend.title=element_text(si
 ##############################################################
 ##############################################################
 mydataAll <- read.csv(file="memUse.txt", header=FALSE, sep=",")
-colnames(mydataAll) <- c("Dataset","memUsed","System","NumCores","NumClasses","NumObservations","NumFeatures")
+colnames(mydataAll) <- c("Dataset","memUsed","TestType","System","NumCores","NumClasses","NumObservations","NumFeatures")
 mydataAll[,2] <- as.integer(mydataAll[,2])/1000000
+mydataAll[,5] <- as.integer(mydataAll[,5])
+mydataAll[,6] <- as.integer(mydataAll[,6])
+mydataAll[,7] <- as.integer(mydataAll[,7])
+mydataAll[,8] <- as.integer(mydataAll[,8])
 mydataAll[,4] <- revalue(mydataAll[,4], c("binnedBase"="RF", "binnedBaseRerF"="RerF","rfBase"="RF(no bin)","rerf"="RerF(no bin)"))
 
 
 mydata <- mydataAll[mydataAll[,3]=="cores",]
 mydata <- data_summary(mydata,varname="memUsed",groupnames=c("System","NumCores"))
-png(filename="MemUsedThread.png")
+#png(filename="MemUsedThread.png")
 p <- ggplot(mydata, aes(NumCores, memUsed, color=System)) + geom_line(size=1.5)
 p <- p + guides(fill = guide_legend(title="System"))
 p <- p +leg + labs(title="Multithread Effects on Training Memory", x="Number of Threads(log2)", y="Training Memory(GB)", subtitle=paste("SVHN, 128 trees, 5 Classes,\n60000 Observations, 1024 Features"))
 #p <- p + theme(axis.text.x = element_text(angle = 45, hjust = .5))
 p <- p + scale_x_continuous(trans="log2")
 #p <- p + facet_grid(Dataset ~ ., scales="free_y")
-print(p)
-dev.off()
+#print(p)
+ggsave("MemeUsedThread.pdf")
+#dev.off()
 
 
 mydata <- mydataAll[mydataAll[,3]=="classes",]
 mydata <- data_summary(mydata,varname="memUsed",groupnames=c("System","NumClasses"))
-png(filename="MemUsedClass.png")
+#png(filename="MemUsedClass.png")
 p <- ggplot(mydata, aes(NumClasses, memUsed, color=System)) + geom_line(size=1.5)
 p <- p + guides(fill = guide_legend(title="System"))
 p <- p +leg + labs(title="Number of Classes Effects on Training Memory", x="Number of Classes", y="Training Memory(GB)", subtitle=paste("SVHN, 128 trees, 16 Threads,\n60000 Observations, 1024 Features"))
@@ -56,12 +61,13 @@ p <- p +leg + labs(title="Number of Classes Effects on Training Memory", x="Numb
 #p <- p + scale_x_continuous(trans="log2")
 #p <- p + scale_y_continuous(trans="log10")
 #p <- p + facet_grid(Dataset ~ ., scales="free_y")
-print(p)
-dev.off()
+#print(p)
+ggsave("MemeUsedClass.pdf")
+#dev.off()
 
 mydata <- mydataAll[mydataAll[,3]=="observations",]
 mydata <- data_summary(mydata,varname="memUsed",groupnames=c("System","NumObservations"))
-png(filename="MemUsedObservations.png")
+#png(filename="MemUsedObservations.png")
 p <- ggplot(mydata, aes(NumObservations, memUsed, color=System)) + geom_line(size=1.5)
 p <- p + guides(fill = guide_legend(title="System"))
 p <- p +leg + labs(title="Number of Observations Effects on Training Memory", x="Number of Observations", y="Training Memory(GB)", subtitle=paste("SVHN, 128 trees, 16 Threads,\n5 Classes, 1024 Features"))
@@ -69,13 +75,14 @@ p <- p + theme(axis.text.x = element_text(angle = 45, hjust = .5))
 #p <- p + scale_x_continuous(trans="log2")
 #p <- p + scale_y_continuous(trans="log10")
 #p <- p + facet_grid(Dataset ~ ., scales="free_y")
-print(p)
-dev.off()
+#print(p)
+ggsave("MemeUsedObservations.pdf")
+#dev.off()
 
 
 mydata <- mydataAll[mydataAll[,3]=="features",]
 mydata <- data_summary(mydata,varname="memUsed",groupnames=c("System","NumFeatures"))
-png(filename="MemUsedFeatures.png")
+#png(filename="MemUsedFeatures.png")
 p <- ggplot(mydata, aes(NumFeatures, memUsed, color=System)) + geom_line(size=1.5)
 p <- p + guides(fill = guide_legend(title="System"))
 p <- p +leg + labs(title="Number of Features Effects on Training Memory", x="Number of Features", y="Training Memory(GB)", subtitle=paste("SVHN, 128 trees, 16 Threads,\n5 Classes, 60000 Observations"))
@@ -83,6 +90,7 @@ p <- p +leg + labs(title="Number of Features Effects on Training Memory", x="Num
 #p <- p + scale_x_continuous(trans="log2")
 #p <- p + scale_y_continuous(trans="log10")
 #p <- p + facet_grid(Dataset ~ ., scales="free_y")
-print(p)
-dev.off()
+ggsave("MemUsedFeatures.pdf")
+#print(p)
+#dev.off()
 
