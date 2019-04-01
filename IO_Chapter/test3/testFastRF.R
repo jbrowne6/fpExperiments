@@ -1,11 +1,11 @@
 library(rerf)
 
-nTimes <- 10
+nTimes <- 1
 
 num_trees <- 32 
 ML <- c(32)
 
-maxPratio <- 2 
+maxPratio <- 1 
 dataset <- "temp"
 algorithm <- "temp"
 numCores <- 0
