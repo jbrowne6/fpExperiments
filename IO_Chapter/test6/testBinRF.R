@@ -3,8 +3,8 @@ library(rerf)
 nTimes <- 1
 
 num_trees <- 96
-#ML <- c(32,48)
-ML <- c(1,2,4,8,16,32,48)
+ML <- c(32,48)
+#ML <- c(1,2,4,8,16,32,48)
 
 dataset <- "temp"
 algorithm <- "temp"
@@ -13,6 +13,9 @@ time <- 0
 
 resultData <- data.frame(as.character(dataset), algorithm, numCores, time, stringsAsFactors=FALSE)
 
+##############################
+#########  Now test with binning
+#############################
 for(algName in c("rfBase","rerf")){
 
 	#####################################################
@@ -28,7 +31,7 @@ for(algName in c("rfBase","rerf")){
 			gc()
 			ptm <- proc.time()
 			#		forest <- RerF(X,Y, trees=num_trees, bagging=.3, min.parent=1, max.depth=0, store.oob=TRUE, stratify=TRUE, num.cores=p, seed=sample(1:100000,1))
-			forest <- fpRerF(X =X, Y = Y, forestType=algName,minParent=1,numCores=p,numTreesInForest=num_trees)
+			forest <- fpRerF(X =X, Y = Y, forestType=algName,minParent=1,numCores=p,numTreesInForest=num_trees,nodeSizeToBin=1000, nodeSizeBin=1000)
 			ptm_hold <- (proc.time() - ptm)[3]
 			resultData <- rbind(resultData, c("MNIST", algName,p, ptm_hold)) 
 			rm(forest)
@@ -48,7 +51,7 @@ for(algName in c("rfBase","rerf")){
 		for (i in 1:nTimes){
 			gc()
 			ptm <- proc.time()
-			forest <- fpRerF(X =X, Y = Y, forestType=algName,minParent=1,numCores=p,numTreesInForest=num_trees)
+			forest <- fpRerF(X =X, Y = Y, forestType=algName,minParent=1,numCores=p,numTreesInForest=num_trees,nodeSizeToBin=1000, nodeSizeBin=1000)
 			#		forest <- RerF(X,Y, trees=num_trees, bagging=.3, min.parent=1, max.depth=0, store.oob=TRUE, stratify=TRUE, num.cores=p, seed=sample(1:100000,1))
 			ptm_hold <- (proc.time() - ptm)[3]
 			resultData <- rbind(resultData, c("higgs", algName,p, ptm_hold)) 
@@ -67,7 +70,7 @@ for(algName in c("rfBase","rerf")){
 		for (i in 1:nTimes){
 			gc()
 			ptm <- proc.time()
-			forest <- fpRerF(X =X, Y = Y, forestType=algName,minParent=1,numCores=p,numTreesInForest=num_trees)
+			forest <- fpRerF(X =X, Y = Y, forestType=algName,minParent=1,numCores=p,numTreesInForest=num_trees,nodeSizeToBin=1000, nodeSizeBin=1000)
 			#		forest <- RerF(X,Y, trees=num_trees, bagging=.3, min.parent=1, max.depth=0, store.oob=TRUE, stratify=TRUE, num.cores=p, seed=sample(1:100000,1))
 			ptm_hold <- (proc.time() - ptm)[3]
 			resultData <- rbind(resultData, c("p53", algName,p, ptm_hold))  
@@ -76,6 +79,8 @@ for(algName in c("rfBase","rerf")){
 	}
 
 }
+
+
 
 resultData <- resultData[2:nrow(resultData),]
 resultData[,1] <- as.factor(resultData[,1])

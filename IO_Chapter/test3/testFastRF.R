@@ -1,11 +1,11 @@
 library(rerf)
 
-nTimes <- 1
+nTimes <- 10
 
 num_trees <- 32 
 ML <- c(32)
 
-maxPratio <- .4
+maxPratio <- 2 
 dataset <- "temp"
 algorithm <- "temp"
 numCores <- 0
@@ -51,7 +51,7 @@ for(algName in c("rerf")){
 			for (i in 1:nTimes){
 				gc()
 				ptm <- proc.time()
-				forest <- fpRerF(X =X, Y = Y, forestType=algName,minParent=1,mtry=j*ncol(X),numCores=p,nnumTreesInForest=num_trees)
+				forest <- fpRerF(X =X, Y = Y, forestType=algName,minParent=1,mtry=j*ncol(X),numCores=p,numTreesInForest=num_trees)
 				#		forest <- RerF(X,Y, trees=num_trees, bagging=.3, min.parent=1, max.depth=0, store.oob=TRUE, stratify=TRUE, num.cores=p, seed=sample(1:100000,1))
 				ptm_hold <- (proc.time() - ptm)[3]
 				resultData <- rbind(resultData, c("higgs", algName,j, ptm_hold)) 
@@ -72,7 +72,7 @@ for(algName in c("rerf")){
 			for (i in 1:nTimes){
 				gc()
 				ptm <- proc.time()
-				forest <- fpRerF(X =X, Y = Y, forestType=algName,minParent=1,mtry=j*ncol(X),numCores=p,nnumTreesInForest=num_trees)
+				forest <- fpRerF(X =X, Y = Y, forestType=algName,minParent=1,mtry=j*ncol(X),numCores=p,numTreesInForest=num_trees)
 				#		forest <- RerF(X,Y, trees=num_trees, bagging=.3, min.parent=1, max.depth=0, store.oob=TRUE, stratify=TRUE, num.cores=p, seed=sample(1:100000,1))
 				ptm_hold <- (proc.time() - ptm)[3]
 				resultData <- rbind(resultData, c("p53", algName,j, ptm_hold))  

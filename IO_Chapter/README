@@ -11,6 +11,7 @@ I expect to be faster in most situations, and competitive otherwise.
 3.  The motivation for a fast RerF is to increase p to 2d.  This isn't feasible for many datasets.  But We can show how training time increases with p.
 I expect it to be linear.
 
+================================================
 4.  Do scale-up comparisons against Ranger and XGBoost.
 I expect to scale better.
 

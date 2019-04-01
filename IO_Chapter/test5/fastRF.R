@@ -1,20 +1,30 @@
+args = commandArgs()
+if (length(args)!=12) {
+	  stop("At least two arguments must be supplied.")
+} else {
+algName = args[6]
+dataset = args[7]
+numCores = as.integer(args[8])
+nTimes = as.integer(args[9])
+nClass = as.integer(args[10])
+nSamples = as.integer(args[11])
+nfeats = as.integer(args[12])
+}
+
 library(rerf)
 
-nTimes <- 1
+algorithm=algName
+num_trees <- 128
+ML <- numCores
+	#ML <- c(1,2,4,8,16,32,48)
 
-num_trees <- 96
-#ML <- c(32,48)
-ML <- c(1,2,4,8,16,32,48)
-
-dataset <- "temp"
-algorithm <- "temp"
 numCores <- 0
 time <- 0
 
-resultData <- data.frame(as.character(dataset), algorithm, numCores, time, stringsAsFactors=FALSE)
+resultData <- data.frame(as.character(dataset), algorithm, numCores, time,time,time,time, stringsAsFactors=FALSE)
 
-for(algName in c("rfBase","rerf")){
 
+if(dataset == "mnist"){
 	#####################################################
 	#########                MNIST
 	#####################################################
@@ -28,15 +38,16 @@ for(algName in c("rfBase","rerf")){
 			gc()
 			ptm <- proc.time()
 			#		forest <- RerF(X,Y, trees=num_trees, bagging=.3, min.parent=1, max.depth=0, store.oob=TRUE, stratify=TRUE, num.cores=p, seed=sample(1:100000,1))
-			forest <- fpRerF(X =X, Y = Y, forestType=algName,minParent=1,numCores=p,numTreesInForest=num_trees)
+			forest <- fpRerF(X =X, Y = Y, forestType=algName,minParent=1,numTreesInForest=num_trees,numCores=p)
 			ptm_hold <- (proc.time() - ptm)[3]
 			resultData <- rbind(resultData, c("MNIST", algName,p, ptm_hold)) 
 			rm(forest)
 		}
 	}
+}
 
 
-
+if(dataset == "Higgs"){
 	####################################################
 	##########              HIGGS1
 	####################################################
@@ -48,14 +59,19 @@ for(algName in c("rfBase","rerf")){
 		for (i in 1:nTimes){
 			gc()
 			ptm <- proc.time()
-			forest <- fpRerF(X =X, Y = Y, forestType=algName,minParent=1,numCores=p,numTreesInForest=num_trees)
+			forest <- fpRerF(X =X, Y = Y, forestType=algName,minParent=1,numTreesInForest=num_trees,numCores=p)
 			#		forest <- RerF(X,Y, trees=num_trees, bagging=.3, min.parent=1, max.depth=0, store.oob=TRUE, stratify=TRUE, num.cores=p, seed=sample(1:100000,1))
 			ptm_hold <- (proc.time() - ptm)[3]
 			resultData <- rbind(resultData, c("higgs", algName,p, ptm_hold)) 
 			rm(forest)
 		}
 	}
+}
 
+
+
+
+if(dataset == "p53"){
 	####################################################
 	##########             P53 
 	####################################################
@@ -67,15 +83,36 @@ for(algName in c("rfBase","rerf")){
 		for (i in 1:nTimes){
 			gc()
 			ptm <- proc.time()
-			forest <- fpRerF(X =X, Y = Y, forestType=algName,minParent=1,numCores=p,numTreesInForest=num_trees)
+			forest <- fpRerF(X =X, Y = Y, forestType=algName,minParent=1,numTreesInForest=num_trees,numCores=p)
 			#		forest <- RerF(X,Y, trees=num_trees, bagging=.3, min.parent=1, max.depth=0, store.oob=TRUE, stratify=TRUE, num.cores=p, seed=sample(1:100000,1))
 			ptm_hold <- (proc.time() - ptm)[3]
 			resultData <- rbind(resultData, c("p53", algName,p, ptm_hold))  
 			rm(forest)
 		}
 	}
-
 }
+
+
+if(dataset == "svhn"){
+	####################################################
+	##########             svhn 
+	####################################################
+	X <- as.matrix(read.csv(file="temp_data.csv", header=FALSE, sep=","))
+	Y <- read.csv(file="temp_label.csv", header=FALSE, sep=",")$V1
+
+	gc()
+	for (p in ML){
+		for (i in 1:nTimes){
+			gc()
+			ptm <- proc.time()
+			forest <- fpRerF(X =X, Y = Y, forestType=algName,minParent=1,numTreesInForest=num_trees,numCores=p)
+			ptm_hold <- (proc.time() - ptm)[3]
+			resultData <- rbind(resultData, c(dataset, algName,p, ptm_hold),nClass,nSamples,nfeats)  
+			rm(forest)
+		}
+	}
+}
+
 
 resultData <- resultData[2:nrow(resultData),]
 resultData[,1] <- as.factor(resultData[,1])

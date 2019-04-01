@@ -3,8 +3,8 @@ library(rerf)
 nTimes <- 1
 
 num_trees <- 96
-#ML <- c(32,48)
-ML <- c(1,2,4,8,16,32,48)
+ML <- c(32,48)
+#ML <- c(1,2,4,8,16,32,48)
 
 dataset <- "temp"
 algorithm <- "temp"
@@ -12,6 +12,7 @@ numCores <- 0
 time <- 0
 
 resultData <- data.frame(as.character(dataset), algorithm, numCores, time, stringsAsFactors=FALSE)
+
 
 for(algName in c("rfBase","rerf")){
 
@@ -76,6 +77,10 @@ for(algName in c("rfBase","rerf")){
 	}
 
 }
+
+
+
+
 
 resultData <- resultData[2:nrow(resultData),]
 resultData[,1] <- as.factor(resultData[,1])
