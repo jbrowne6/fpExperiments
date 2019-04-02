@@ -17,7 +17,7 @@ data_summary <- function(data, varname, groupnames){
 
 leg <- theme(legend.text = element_text(size = 16), legend.title=element_blank(), plot.title = element_text(size = 16,  face="bold"), plot.subtitle = element_text(size = 16),axis.title.x = element_text(size=16), axis.text.x = element_text(size=16), axis.title.y = element_text(size=16), axis.text.y = element_text(size=16))
 
-
+if(FALSE){
 mydata <- read.csv(file="bench.csv", header=FALSE, sep=",")
 colnames(mydata) <- c("Dataset", "System", "Trees","error")
 maindata <- data_summary(mydata,varname="error",groupnames=c("Dataset","Trees"))
@@ -32,6 +32,7 @@ p <- p + facet_grid(Dataset ~ .)
 p <- p + theme(legend.position="bottom")
 print(p)
 dev.off()
+}
 
 
 mydata <- read.csv(file="benchBB.csv", header=FALSE, sep=",")
