@@ -36,10 +36,10 @@ for(datasetName in datasets){
 			train_ind <- sample(seq_len(nrow(x)),size=smp_size)
 
 			X <- x[train_ind,]
-			Y <- y[train_ind]
+			Y <- yb[train_ind]
 
 			Xt <- x[-train_ind,]
-			Yt <- y[-train_ind]
+			Yt <- yb[-train_ind]
 			forest <- randomForest(x=X, y=Y, nodesize=1,ntree=j)
 
 			predictions <- predict(forest, Xt)
