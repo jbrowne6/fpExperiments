@@ -1,9 +1,9 @@
 library(lightgbm)
 library(data.table)
 
-nTimes <- 3
+nTimes <- 1
 
-num_trees <- 96
+num_trees <- 48
 ML <- c(32,48)
 #ML <- c(1,2,4,8,16,32,48)
 
@@ -11,13 +11,13 @@ algorithm <- "lightGBM"
 numCores <- 0
 time <- 0
 
-resultData <- data.frame(as.character(dataset), algorithm, numCores, time,time, stringsAsFactors=FALSE)
+resultData <- data.frame("MNIST", algorithm, numCores, time,time, stringsAsFactors=FALSE)
 
 
 #####################################################
 #########                MNIST
 #####################################################
-X <- as.matrix(fread(file="../res/mnist.csv", header=FALSE, sep=","))
+X <- as.matrix(fread(file="../../res/mnist.csv", header=FALSE, sep=","))
 Y <- X[,1]
 X <- X[, (2:785)]
 num_classes <- length(unique(Y))
@@ -40,7 +40,7 @@ for (i in 1:nTimes){
 ####################################################
 ##########              HIGGS1
 ####################################################
-X <- as.matrix(fread(file="../res/higgsData.csv", header=FALSE, sep=","))
+X <- as.matrix(fread(file="../../res/higgsData.csv", header=FALSE, sep=","))
 Y <- X[,1]-1
 X <- X[, c(2:32)]
 dtrain <- lgb.Dataset(data=X,label=Y)
@@ -63,7 +63,7 @@ for (i in 1:nTimes){
 ####################################################
 ##########             P53 
 ####################################################
-X <- as.matrix(fread(file="../res/p53.csv", header=TRUE, sep=","))
+X <- as.matrix(fread(file="../../res/p53.csv", header=TRUE, sep=","))
 Y <- X[,ncol(X)]-1
 X <- X[,1:(ncol(X)-1)]
 dtrain <- lgb.Dataset(data=X,label=Y)
