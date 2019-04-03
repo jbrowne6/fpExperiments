@@ -1,7 +1,7 @@
 library(lightgbm)
 library(data.table)
 
-nTimes <- 2
+nTimes <- 10
 
 num_trees <- 512
 #ML <- c(32,48)

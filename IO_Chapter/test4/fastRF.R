@@ -1,7 +1,7 @@
 library(rerf)
 library(data.table)
 
-nTimes <- 2
+nTimes <- 10
 num_trees <- 512
 numCores <- 32
 ML <- 32
