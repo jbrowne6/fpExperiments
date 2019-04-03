@@ -17,19 +17,17 @@ data_summary <- function(data, varname, groupnames){
 
 leg <- theme(legend.text = element_text(size = 16), legend.title=element_blank(), plot.title = element_text(size = 16,  face="bold"), plot.subtitle = element_text(size = 16),axis.title.x = element_text(size=16), axis.text.x = element_text(size=16), axis.title.y = element_text(size=16), axis.text.y = element_text(size=16))
 
-if(FALSE){
 mydata <- read.csv(file="bench.csv", header=FALSE, sep=",")
-colnames(mydata) <- c("Dataset", "Test", "Trees","Iter","error")
+colnames(mydata) <- c("Dataset", "Test", "Iter","Trees","error")
 maindata <- data_summary(mydata,varname="error",groupnames=c("Dataset","Test","Trees"))
 
 
 pdf("BreimanTest.pdf")
 p <- ggplot(mydata, aes(x=Trees))
-p <- p + geom_line(aes(y=error,group=Test),size=0.25,alpha=.25)
-p <- p + geom_line(data=maindata, aes(x=Trees, y=error, group=Test),size=1.0)
+p <- p + geom_line(aes(y=error,color=Test,group=interaction(Test,Iter)),size=0.25,alpha=.25)
+p <- p + geom_line(data=maindata, aes(x=Trees, y=error,color=Test),size=1.0)
 p <- p + leg + labs(title="Correctness of fastRF", x="Number of Trees", y="Ratio Matching Predictions")
 p <- p + facet_grid(Dataset ~ .)
 p <- p + theme(legend.position="bottom")
 print(p)
 dev.off()
-}

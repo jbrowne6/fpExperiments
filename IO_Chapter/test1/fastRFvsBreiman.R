@@ -8,8 +8,8 @@ ML <- numCores
 algName <- "hello"
 time <- 0
 
-set.seed(130)
-resultData <- data.frame("MNIST","fvb",numCores,time,time, stringsAsFactors=FALSE)
+set.seed(13)
+resultData <- data.frame("MNIST","FvB",numCores,time,time, stringsAsFactors=FALSE)
 
 
 library(slb)
@@ -34,7 +34,7 @@ for(datasetName in datasets){
     for (p in 10){
       for (i in 1:nTimes){
         print(paste(datasetName," --- ", i))
-          train_ind <- sample(seq_len(nrow(x)),size=smp_size)
+        train_ind <- sort(sample(seq_len(nrow(x)),size=smp_size))
         for(j in c(100,200,300,400,500)){
           gc()
 
@@ -58,7 +58,7 @@ for(datasetName in datasets){
 
           predictionsB <- predict(forest, Xt)
 
-          error <- sum(predictionsB==predictions)/length(Yt)
+          error <- sum((as.numeric(predictionsB)-1)==predictions)/length(Yt)
           resultData <- rbind(resultData, c(datasetName,"FvB",i,j,error)) 
 
           rm(forest)
@@ -68,7 +68,6 @@ for(datasetName in datasets){
           predictionsC <- predict(forest, Xt)
 
           errorB <- sum(predictionsB==predictionsC)/length(Yt)
-
 
           resultData <- rbind(resultData, c(datasetName,"BvB",i,j,errorB )) 
 
@@ -82,7 +81,9 @@ for(datasetName in datasets){
 
 resultData <- resultData[2:nrow(resultData),]
 resultData[,1] <- as.factor(resultData[,1])
-resultData[,2] <- as.numeric(resultData[,2])
+resultData[,2] <- as.factor(resultData[,2])
 resultData[,3] <- as.numeric(resultData[,3])
+resultData[,4] <- as.numeric(resultData[,4])
+resultData[,5] <- as.numeric(resultData[,5])
 
 write.table(resultData, file="bench.csv", col.names=FALSE, row.names=FALSE, append=TRUE, sep=",", quote=FALSE)
