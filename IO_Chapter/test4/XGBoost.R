@@ -2,11 +2,13 @@ library(xgboost)
 library(data.table)
 
 
-nTimes <- 1
+nTimes <- 2
 num_trees <- 512
 numCores <- 32
 ML <- numCores
 algName <- "hello"
+#nTree <- c(1,2,4,8,16,32)
+nTree <- c(1,2)
 time <- 0
 
 resultData <- data.frame("MNIST",algName, numCores, time, time, stringsAsFactors=FALSE)
@@ -20,21 +22,23 @@ Y <- X[,1]
 X <- X[, (2:785)]
 num_classes <- length(unique(Y))
 
+for (tMult in nTree){
+  num_trees <- tMult*numCores
+  for (i in 1:nTimes){
+    for (p in ML){
+      print(paste("XGBoost run ", i, " with ", p, " cores."))
+      gc()
+      forest <- xgboost(data=X, label=Y, objective="multi:softprob",nrounds=num_trees,colsample_bynode=sqrt(nrow(X))/nrow(X), num_class=num_classes, nthread=p)
 
-for (i in 1:nTimes){
-	for (p in ML){
-		print(paste("XGBoost run ", i, " with ", p, " cores."))
-		gc()
-		forest <- xgboost(data=X, label=Y, objective="multi:softprob",nrounds=num_trees,colsample_bynode=sqrt(nrow(X))/nrow(X), num_class=num_classes, nthread=p)
+      ptm <- proc.time()
+      pred <- predict(forest, X) 
+      pred <- matrix(pred, ncol=num_classes, byrow=TRUE) 
+      pred_labels <- max.col(pred) - 1
+      ptm_hold <- (proc.time() - ptm)[3]
 
-		ptm <- proc.time()
-		pred <- predict(forest, X) 
-		pred <- matrix(pred, ncol=num_classes, byrow=TRUE) 
-		pred_labels <- max.col(pred) - 1
-		ptm_hold <- (proc.time() - ptm)[3]
-
-		resultData <- rbind(resultData, c("MNIST", "XGBoost",p, ptm_hold,i)) 
-	}
+      resultData <- rbind(resultData, c("MNIST", "XGBoost",p, ptm_hold,i)) 
+    }
+  }
 }
 
 
@@ -47,20 +51,23 @@ Y <- X[,1]-1
 X <- X[, c(2:32)]
 num_classes <- length(unique(Y))
 
-for (i in 1:nTimes){
-	for (p in ML){
-		print(paste("XGBoost run ", i, " with ", p, " cores."))
-		gc()
-		forest <- xgboost(data=X, label=Y, objective="multi:softprob",nrounds=num_trees,colsample_bynode=sqrt(nrow(X))/nrow(X), num_class=num_classes, nthread=p)
+for (tMult in nTree){
+  num_trees <- tMult*numCores
+  for (i in 1:nTimes){
+    for (p in ML){
+      print(paste("XGBoost run ", i, " with ", p, " cores."))
+      gc()
+      forest <- xgboost(data=X, label=Y, objective="multi:softprob",nrounds=num_trees,colsample_bynode=sqrt(nrow(X))/nrow(X), num_class=num_classes, nthread=p)
 
-		ptm <- proc.time()
-		pred <- predict(forest, X) 
-		pred <- matrix(pred, ncol=num_classes, byrow=TRUE) 
-		pred_labels <- max.col(pred) - 1
-		ptm_hold <- (proc.time() - ptm)[3]
+      ptm <- proc.time()
+      pred <- predict(forest, X) 
+      pred <- matrix(pred, ncol=num_classes, byrow=TRUE) 
+      pred_labels <- max.col(pred) - 1
+      ptm_hold <- (proc.time() - ptm)[3]
 
-		resultData <- rbind(resultData, c("higgs", "XGBoost",p, ptm_hold,i)) 
-	}
+      resultData <- rbind(resultData, c("higgs", "XGBoost",p, ptm_hold,i)) 
+    }
+  }
 }
 
 
@@ -72,20 +79,23 @@ Y <- X[,ncol(X)]-1
 X <- X[,1:(ncol(X)-1)]
 num_classes <- length(unique(Y))
 
-for (i in 1:nTimes){
-	for (p in ML){
-		print(paste("XGBoost run ", i, " with ", p, " cores."))
-		gc()
-		forest <- xgboost(data=X, label=Y, objective="multi:softprob",nrounds=num_trees,colsample_bynode=sqrt(nrow(X))/nrow(X), num_class=num_classes, nthread=p)
+for (tMult in nTree){
+  num_trees <- tMult*numCores
+  for (i in 1:nTimes){
+    for (p in ML){
+      print(paste("XGBoost run ", i, " with ", p, " cores."))
+      gc()
+      forest <- xgboost(data=X, label=Y, objective="multi:softprob",nrounds=num_trees,colsample_bynode=sqrt(nrow(X))/nrow(X), num_class=num_classes, nthread=p)
 
-		ptm <- proc.time()
-		pred <- predict(forest, X) 
-		pred <- matrix(pred, ncol=num_classes, byrow=TRUE) 
-		pred_labels <- max.col(pred) - 1
-		ptm_hold <- (proc.time() - ptm)[3]
+      ptm <- proc.time()
+      pred <- predict(forest, X) 
+      pred <- matrix(pred, ncol=num_classes, byrow=TRUE) 
+      pred_labels <- max.col(pred) - 1
+      ptm_hold <- (proc.time() - ptm)[3]
 
-		resultData <- rbind(resultData, c("p53", "XGBoost",p, ptm_hold,i)) 
-	}
+      resultData <- rbind(resultData, c("p53", "XGBoost",p, ptm_hold,i)) 
+    }
+  }
 }
 
 
