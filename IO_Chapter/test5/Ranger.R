@@ -21,7 +21,7 @@ algorithm <- "Ranger"
 numCores <- 0
 time <- 0
 
-resultData <- data.frame(as.character(dataset), algorithm, numCores, time, stringsAsFactors=FALSE)
+resultData <- data.frame(as.character(dataset), algorithm, numCores, time,time,time,time,time, stringsAsFactors=FALSE)
 
 
 if(dataset=="mnist"){
@@ -102,7 +102,7 @@ if(dataset == "svhn"){
 			ptm <- proc.time()
 			forest <- ranger(dependent.variable.name = as.character(ncol(X)), data = X, num.trees = num_trees, num.threads = p, classification=TRUE)
 			ptm_hold <- (proc.time() - ptm)[3]
-			resultData <- rbind(resultData, c(dataset, algName,p, ptm_hold),nClass,nSamples,nfeats)  
+			resultData <- rbind(resultData, c(dataset,"Ranger",p, ptm_hold,nClass,nSamples,nfeats,i))
 			rm(forest)
 		}
 	}

@@ -6,11 +6,12 @@ if (length(args)!=8) {
 	samples = as.integer(args[7])
 	features = as.integer(args[8])
 }
+library(data.table)
 
 
 make_data <- function(numClass=5, numSamples=60000, feats=1024){
-	X <- as.matrix(read.csv(file = "../../res/streetview/svhn_training_data.csv", header=FALSE,sep=","))
-	Y <- read.csv(file = "../../res/streetview/svhn_training_label.csv", header=FALSE,sep=",")$V1
+	X <- as.matrix(fread(file = "../../res/streetview/svhn_training_data.csv", header=FALSE,sep=","))
+	Y <- fread(file = "../../res/streetview/svhn_training_label.csv", header=FALSE,sep=",")$V1
 	
 
 	classPriority <- c(8,9,6,7,10,5,4,3,2,1)

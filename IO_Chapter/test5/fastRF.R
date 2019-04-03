@@ -12,6 +12,7 @@ nfeats = as.integer(args[12])
 }
 
 library(rerf)
+library(data.table)
 
 algorithm=algName
 num_trees <- 128
@@ -21,14 +22,14 @@ ML <- numCores
 numCores <- 0
 time <- 0
 
-resultData <- data.frame(as.character(dataset), algorithm, numCores, time,time,time,time, stringsAsFactors=FALSE)
+resultData <- data.frame(as.character(dataset), algorithm, numCores, time,time,time,time,time, stringsAsFactors=FALSE)
 
 
 if(dataset == "mnist"){
 	#####################################################
 	#########                MNIST
 	#####################################################
-	X <- read.csv(file="../../res/mnist.csv", header=FALSE, sep=",")
+	X <- as.matrix(fread(file="../../res/mnist.csv", header=FALSE, sep=","))
 	Y <- X[,1]
 	X <- X[, (2:785)]
 
@@ -40,7 +41,7 @@ if(dataset == "mnist"){
 			#		forest <- RerF(X,Y, trees=num_trees, bagging=.3, min.parent=1, max.depth=0, store.oob=TRUE, stratify=TRUE, num.cores=p, seed=sample(1:100000,1))
 			forest <- fpRerF(X =X, Y = Y, forestType=algName,minParent=1,numTreesInForest=num_trees,numCores=p)
 			ptm_hold <- (proc.time() - ptm)[3]
-			resultData <- rbind(resultData, c("MNIST", algName,p, ptm_hold)) 
+			resultData <- rbind(resultData, c("MNIST", algName,p, ptm_hold,i)) 
 			rm(forest)
 		}
 	}
@@ -97,7 +98,7 @@ if(dataset == "svhn"){
 	####################################################
 	##########             svhn 
 	####################################################
-	X <- as.matrix(read.csv(file="temp_data.csv", header=FALSE, sep=","))
+	X <- as.matrix(fread(file="temp_data.csv", header=FALSE, sep=","))
 	Y <- read.csv(file="temp_label.csv", header=FALSE, sep=",")$V1
 
 	gc()
@@ -107,7 +108,7 @@ if(dataset == "svhn"){
 			ptm <- proc.time()
 			forest <- fpRerF(X =X, Y = Y, forestType=algName,minParent=1,numTreesInForest=num_trees,numCores=p)
 			ptm_hold <- (proc.time() - ptm)[3]
-			resultData <- rbind(resultData, c(dataset, algName,p, ptm_hold),nClass,nSamples,nfeats)  
+			resultData <- rbind(resultData, c(dataset, algName,p,ptm_hold,nClass,nSamples,nfeats,i))
 			rm(forest)
 		}
 	}

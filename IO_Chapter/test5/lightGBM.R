@@ -21,7 +21,7 @@ algorithm <- "lightGBM"
 numCores <- 0
 time <- 0
 
-resultData <- data.frame(as.character(dataset), algorithm, numCores, time, stringsAsFactors=FALSE)
+resultData <- data.frame(as.character(dataset), algorithm, numCores, time,time,time,time,time, stringsAsFactors=FALSE)
 
 
 if(dataset == "mnist"){
@@ -106,15 +106,13 @@ if(dataset == "svhn"){
 		for (i in 1:nTimes){
 			gc()
 			ptm <- proc.time()
-			forest <- lgb.train(data=dtrain, objective="multiclass",nrounds=num_trees, num_class=num_classes, nthread=p)
+			forest <- lgb.train(data=dtrain,objective="multiclass",nrounds=num_trees, num_class=num_classes, nthread=p)
 			ptm_hold <- (proc.time() - ptm)[3]
-			resultData <- rbind(resultData, c(dataset, algName,p, ptm_hold),nClass,nSamples,nfeats)  
+			resultData <- rbind(resultData, c(dataset,"LightGBM",p, ptm_hold,nClass,nSamples,nfeats,i))  
 			rm(forest)
 		}
 	}
 }
-
-
 
 
 resultData <- resultData[2:nrow(resultData),]
