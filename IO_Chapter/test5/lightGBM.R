@@ -14,16 +14,14 @@ testName = as.character(args[12])
 library(lightgbm)
 library(data.table)
 
-nTimes <- 1
 
 num_trees <- 128
 ML <- numThreads
 
 algorithm <- "lightGBM"
-numCores <- 0
 time <- 0
 
-resultData <- data.frame(as.character(dataset), algorithm, numCores, time,time,time,time,time, stringsAsFactors=FALSE)
+resultData <- data.frame(as.character(dataset), algorithm, time, time,time,time,time,time, stringsAsFactors=FALSE)
 
 
 if(dataset == "mnist"){

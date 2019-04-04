@@ -14,13 +14,16 @@ nClass=5
 
 
 testName="classes"
-for nClass in 2 3 4 5 6 7 8 9 10
+#for nClass in 2 3 4 5 6 7 8 9 10
+for nClass in 2 3 4
 do
   echo "writing file"
   Rscript createDS.R $nClass -1 -1
   echo "done writing"
-  nSample=60000
-  nFeature=1024
+  #nSample=60000
+  nSample=6000
+  #nFeature=1024
+  nFeature=128
 
   for nTimesLoop in {1..5}
   do
@@ -72,13 +75,15 @@ done
 
 
 testName="observations"
-for nSample in 30000 60000 90000 120000 150000 180000
+#for nSample in 30000 60000 90000 120000 150000 180000
+for nSample in 300 600 900 1200 1500 1800
 do
   echo "writing file"
   Rscript createDS.R -1 $nSample -1
   echo "done writing"
   nClass=5
-  nFeature=1024
+  #nFeature=1024
+  nFeature=128
 
   for nTimesLoop in {1..5}
   do
@@ -131,13 +136,15 @@ done
 
 
 testName="features"
-for nFeature in 250 500 1000 1500 2250 3072
+#for nFeature in 250 500 1000 1500 2250 3072
+for nFeature in 25 50 100 150 225 307
 do
   echo "writing file"
   Rscript createDS.R -1 -1 $nFeature
   echo "done writing"
   nClass=5
-  nSample=60000
+  #nSample=60000
+  nSample=6000
 
   for nTimesLoop in {1..5}
   do

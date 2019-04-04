@@ -19,14 +19,8 @@ algorithm=algName
 num_trees <- 128
 ML <- numCores
 	#ML <- c(1,2,4,8,16,32,48)
-
-numCores <- 0
 time <- 0
-print(dataset)
-print(algorithm)
-print(testName)
-print(numCores)
-print(time)
+
 resultData <- data.frame(as.character(dataset),testName, algorithm,numCores, time,time,time,time,time, stringsAsFactors=FALSE)
 
 
@@ -119,15 +113,6 @@ if(dataset == "svhn"){
 			ptm <- proc.time()
 			forest <- fpRerF(X =X, Y = Y, forestType=algName,minParent=1,numTreesInForest=num_trees,numCores=p)
 			ptm_hold <- (proc.time() - ptm)[3]
-print(dataset)
-print(algName)
-print(testName)
-print(p)
-print(ptm_hold)
-print(nClass)
-print(nSamples)
-print(nfeats)
-print(i)
 
 			resultData <- rbind(resultData, c("svhn", algName,testName,p,ptm_hold,nClass,nSamples,nfeats,i))
 			rm(forest)
