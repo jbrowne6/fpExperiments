@@ -1,5 +1,5 @@
 args = commandArgs()
-if (length(args)!=12) {
+if (length(args)!=13) {
 	  stop("At least two arguments must be supplied.")
 } else {
 algName = args[6]
@@ -9,6 +9,7 @@ nTimes = as.integer(args[9])
 nClass = as.integer(args[10])
 nSamples = as.integer(args[11])
 nfeats = as.integer(args[12])
+testName = as.character(args[13])
 }
 
 library(rerf)
@@ -21,8 +22,12 @@ ML <- numCores
 
 numCores <- 0
 time <- 0
-
-resultData <- data.frame(as.character(dataset), algorithm, numCores, time,time,time,time,time, stringsAsFactors=FALSE)
+print(dataset)
+print(algorithm)
+print(testName)
+print(numCores)
+print(time)
+resultData <- data.frame(as.character(dataset),testName, algorithm,numCores, time,time,time,time,time, stringsAsFactors=FALSE)
 
 
 if(dataset == "mnist"){
@@ -97,9 +102,15 @@ if(dataset == "p53"){
 if(dataset == "svhn"){
 	####################################################
 	##########             svhn 
-	####################################################
-	X <- as.matrix(fread(file="temp_data.csv", header=FALSE, sep=","))
-	Y <- read.csv(file="temp_label.csv", header=FALSE, sep=",")$V1
+  ####################################################
+  X <- as.matrix(fread(file="temp_data.csv", header=FALSE, sep=","))
+  Y <- as.numeric(fread(file="temp_label.csv", header=FALSE, sep=",")$V1)
+  if(min(Y) != 0){
+    Y <- Y -1
+  }
+  if(min(Y) != 0){
+    stop("dataset does not contain 0, fastRF")
+  }
 
 	gc()
 	for (p in ML){
@@ -108,7 +119,17 @@ if(dataset == "svhn"){
 			ptm <- proc.time()
 			forest <- fpRerF(X =X, Y = Y, forestType=algName,minParent=1,numTreesInForest=num_trees,numCores=p)
 			ptm_hold <- (proc.time() - ptm)[3]
-			resultData <- rbind(resultData, c(dataset, algName,p,ptm_hold,nClass,nSamples,nfeats,i))
+print(dataset)
+print(algName)
+print(testName)
+print(p)
+print(ptm_hold)
+print(nClass)
+print(nSamples)
+print(nfeats)
+print(i)
+
+			resultData <- rbind(resultData, c("svhn", algName,testName,p,ptm_hold,nClass,nSamples,nfeats,i))
 			rm(forest)
 		}
 	}
@@ -118,7 +139,8 @@ if(dataset == "svhn"){
 resultData <- resultData[2:nrow(resultData),]
 resultData[,1] <- as.factor(resultData[,1])
 resultData[,2] <- as.factor(resultData[,2])
-resultData[,3] <- as.numeric(resultData[,3])
+resultData[,3] <- as.factor(resultData[,3])
+resultData[,5] <- as.numeric(resultData[,5])
 resultData[,4] <- as.numeric(resultData[,4])
 
 write.table(resultData, file="bench.csv", col.names=FALSE, row.names=FALSE, append=TRUE, sep=",", quote=FALSE)
