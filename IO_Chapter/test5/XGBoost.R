@@ -14,16 +14,13 @@ if (length(args)!=12) {
 library(xgboost)
 library(data.table)
 
-nTimes <- 1
-
 num_trees <- 128
 ML <- numThreads
 
 algorithm <- "XGBoost"
-numCores <- 0
 time <- 0
 
-resultData <- data.frame(as.character(dataset), algorithm, numCores,time,time,time,time,time, stringsAsFactors=FALSE)
+resultData <- data.frame(as.character(dataset),algorithm,testName,time,time,time,time,time,time, stringsAsFactors=FALSE)
 
 
 if(dataset == "mnist"){

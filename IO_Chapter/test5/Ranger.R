@@ -14,7 +14,6 @@ testName = as.character(args[12])
 library(ranger)
 library(data.table)
 
-nTimes <- 1
 
 num_trees <- 128
 ML <- numThreads
