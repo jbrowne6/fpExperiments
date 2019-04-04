@@ -1,13 +1,13 @@
 library(rerf)
 library(data.table)
 
-nTimes <- 10
+nTimes <- 2
 num_trees <- 512
 numCores <- 32
 ML <- 32
 algName <- "hello"
+nTree <- c(1,2)
 #nTree <- c(1,2,4,8,16,32)
-nTree <- c(1,2,4,8,16,32)
 time <- 0
 
 resultData <- data.frame("MNIST",algName,numCores,time,time, stringsAsFactors=FALSE)
@@ -33,7 +33,7 @@ for (algName in c("binnedBase","binnedBaseRerF")){
         predictions <- fpPredict(forest, X)
         ptm_hold <- (proc.time() - ptm)[3]
 
-        resultData <- rbind(resultData, c("MNIST",algName,p,ptm_hold,i)) 
+        resultData <- rbind(resultData, c("MNIST",algName,num_trees,ptm_hold,i)) 
 
         forest$printParameters()
         rm(forest)
@@ -61,7 +61,7 @@ for (algName in c("binnedBase","binnedBaseRerF")){
           ptm_hold <- (proc.time() - ptm)[3]
 
 
-          resultData <- rbind(resultData, c("higgs", algName,p, ptm_hold,i)) 
+          resultData <- rbind(resultData, c("higgs", algName,num_trees, ptm_hold,i)) 
           rm(forest)
         }
       }
@@ -85,7 +85,7 @@ for (algName in c("binnedBase","binnedBaseRerF")){
           predictions <- fpPredict(forest, X)
           ptm_hold <- (proc.time() - ptm)[3]
 
-          resultData <- rbind(resultData, c("p53", algName,p, ptm_hold,i))  
+          resultData <- rbind(resultData, c("p53", algName,num_trees, ptm_hold,i))  
           rm(forest)
         }
       }

@@ -1,7 +1,7 @@
 library(lightgbm)
 library(data.table)
 
-nTimes <- 10
+nTimes <- 2
 
 num_trees <- 512
 #ML <- c(32,48)
@@ -42,7 +42,7 @@ if(FALSE){
         #pred_labels <- max.col(pred) - 1
         ptm_hold <- (proc.time() - ptm)[3]
 
-        resultData <- rbind(resultData, c("MNIST", algorithm,p, ptm_hold,i)) 
+        resultData <- rbind(resultData, c("MNIST", algorithm,num_trees, ptm_hold,i)) 
       }
     }
   }
@@ -71,7 +71,7 @@ for (tMult in nTree){
       pred_labels <- max.col(pred) - 1
       ptm_hold <- (proc.time() - ptm)[3]
 
-      resultData <- rbind(resultData, c("higgs",algorithm,p, ptm_hold,i)) 
+      resultData <- rbind(resultData, c("higgs",algorithm,num_trees, ptm_hold,i)) 
     }
   }
 }
@@ -100,7 +100,7 @@ for (tMult in nTree){
       ptm_hold <- (proc.time() - ptm)[3]
 
 
-      resultData <- rbind(resultData, c("p53",algorithm,p, ptm_hold,i)) 
+      resultData <- rbind(resultData, c("p53",algorithm,num_trees, ptm_hold,i)) 
     }
   }
 }

@@ -1,7 +1,7 @@
 library(ranger)
 library(data.table)
 
-nTimes <- 10
+nTimes <- 2
 num_trees <- 512
 numCores <- 32
 ML <- numCores
@@ -31,7 +31,7 @@ for (tMult in nTree){
       pred <- predict(forest,X, num.threads=p)
       ptm_hold <- (proc.time() - ptm)[3]
 
-      resultData <- rbind(resultData, c("MNIST", "Ranger",p, ptm_hold,i)) 
+      resultData <- rbind(resultData, c("MNIST", "Ranger",num_trees, ptm_hold,i)) 
     }
   }
 }
@@ -55,7 +55,7 @@ for (tMult in nTree){
       pred <- predict(forest,X, num.threads=p)
       ptm_hold <- (proc.time() - ptm)[3]
 
-      resultData <- rbind(resultData, c("higgs", "Ranger",p, ptm_hold,i)) 
+      resultData <- rbind(resultData, c("higgs", "Ranger",num_trees, ptm_hold,i)) 
     }
   }
 }
@@ -78,7 +78,7 @@ for (tMult in nTree){
       pred <- predict(forest,X, num.threads=p)
       ptm_hold <- (proc.time() - ptm)[3]
 
-      resultData <- rbind(resultData, c("p53", "Ranger",p, ptm_hold,i)) 
+      resultData <- rbind(resultData, c("p53", "Ranger",num_trees, ptm_hold,i)) 
     }
   }
 }

@@ -2,7 +2,7 @@ library(xgboost)
 library(data.table)
 
 
-nTimes <- 10
+nTimes <- 2
 num_trees <- 512
 numCores <- 32
 ML <- numCores
@@ -36,7 +36,7 @@ for (tMult in nTree){
       pred_labels <- max.col(pred) - 1
       ptm_hold <- (proc.time() - ptm)[3]
 
-      resultData <- rbind(resultData, c("MNIST", "XGBoost",p, ptm_hold,i)) 
+      resultData <- rbind(resultData, c("MNIST", "XGBoost",num_trees, ptm_hold,i)) 
     }
   }
 }
@@ -65,7 +65,7 @@ for (tMult in nTree){
       pred_labels <- max.col(pred) - 1
       ptm_hold <- (proc.time() - ptm)[3]
 
-      resultData <- rbind(resultData, c("higgs", "XGBoost",p, ptm_hold,i)) 
+      resultData <- rbind(resultData, c("higgs", "XGBoost",num_trees, ptm_hold,i)) 
     }
   }
 }
@@ -93,7 +93,7 @@ for (tMult in nTree){
       pred_labels <- max.col(pred) - 1
       ptm_hold <- (proc.time() - ptm)[3]
 
-      resultData <- rbind(resultData, c("p53", "XGBoost",p, ptm_hold,i)) 
+      resultData <- rbind(resultData, c("p53", "XGBoost",num_trees, ptm_hold,i)) 
     }
   }
 }
