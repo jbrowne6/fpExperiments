@@ -1,11 +1,10 @@
 library(lightgbm)
 library(data.table)
 
-nTimes <- 1
+nTimes <- 10
 
-num_trees <- 48
-ML <- c(32,48)
-#ML <- c(1,2,4,8,16,32,48)
+num_trees <- 96
+ML <- c(1,2,4,8,16,32,48)
 
 algorithm <- "lightGBM"
 numCores <- 0
@@ -30,7 +29,7 @@ for (i in 1:nTimes){
 	for (p in ML){
 		gc()
 		ptm <- proc.time()
-		forest <- lgb.train(data=dtrain, objective="multiclass", num_class=num_classes,learning_rate=.1,n_estimators=num_trees, nthread=p)
+		forest <- lgb.train(data=dtrain, objective="multiclass", num_class=num_classes,learning_rate=.1,nrounds=num_trees, nthread=p)
 		ptm_hold <- (proc.time() - ptm)[3]
 		resultData <- rbind(resultData, c("MNIST", algorithm,p, ptm_hold,i)) 
 	}
@@ -51,7 +50,7 @@ for (i in 1:nTimes){
 	for (p in ML){
 		gc()
 		ptm <- proc.time()
-		forest <- lgb.train(data=dtrain, objective="multiclass",num_class=num_classes,learning_rate=.1,n_estimators=num_trees, nthread=p)
+		forest <- lgb.train(data=dtrain, objective="multiclass",num_class=num_classes,learning_rate=.1,nrounds=num_trees, nthread=p)
 		ptm_hold <- (proc.time() - ptm)[3]
 		resultData <- rbind(resultData, c("higgs",algorithm,p, ptm_hold,i)) 
 	}
@@ -74,7 +73,7 @@ for (i in 1:nTimes){
 	for (p in ML){
 		gc()
 		ptm <- proc.time()
-		forest <- lgb.train(data=dtrain, objective="multiclass", num_class=num_classes,learning_rate=.1,n_estimators=num_trees, nthread=p)
+		forest <- lgb.train(data=dtrain, objective="multiclass", num_class=num_classes,learning_rate=.1,nrounds=num_trees, nthread=p)
 		ptm_hold <- (proc.time() - ptm)[3]
 		resultData <- rbind(resultData, c("p53",algorithm,p, ptm_hold,i)) 
 	}

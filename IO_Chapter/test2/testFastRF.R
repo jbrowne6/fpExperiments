@@ -1,11 +1,16 @@
+args = commandArgs()
+if (length(args)!=6) {
+	  stop("one argument must be supplied.")
+} else {
+i = as.integer(args[6])
+}
 library(rerf)
 library(data.table)
 
 nTimes <- 1
 
 num_trees <- 96
-ML <- c(32,48)
-#ML <- c(1,2,4,8,16,32,48)
+ML <- c(1,2,4,8,16,32,48)
 
 dataset <- "temp"
 algorithm <- "temp"
@@ -24,8 +29,8 @@ for(algName in c("rfBase","rerf")){
 	X <- X[, (2:785)]
 
 
-		for (i in 1:nTimes){
-	for (p in ML){
+#	for (i in 1:nTimes){
+		for (p in ML){
 			gc()
 			ptm <- proc.time()
 			#		forest <- RerF(X,Y, trees=num_trees, bagging=.3, min.parent=1, max.depth=0, store.oob=TRUE, stratify=TRUE, num.cores=p, seed=sample(1:100000,1))
@@ -34,7 +39,7 @@ for(algName in c("rfBase","rerf")){
 			resultData <- rbind(resultData, c("MNIST", algName,p, ptm_hold,i)) 
 			rm(forest)
 		}
-	}
+#	}
 
 
 
@@ -45,8 +50,8 @@ for(algName in c("rfBase","rerf")){
 	Y <- as.integer(X[,1]-1)
 	X <- X[, c(2:32)]
 
-		for (i in 1:nTimes){
-	for (p in ML){
+#	for (i in 1:nTimes){
+		for (p in ML){
 			gc()
 			ptm <- proc.time()
 			forest <- fpRerF(X =X, Y = Y, forestType=algName,minParent=1,numCores=p,numTreesInForest=num_trees)
@@ -55,7 +60,7 @@ for(algName in c("rfBase","rerf")){
 			resultData <- rbind(resultData, c("higgs", algName,p, ptm_hold,i)) 
 			rm(forest)
 		}
-	}
+#	}
 
 	####################################################
 	##########             P53 
@@ -64,17 +69,16 @@ for(algName in c("rfBase","rerf")){
 	Y <- as.integer(X[,ncol(X)]-1)
 	X <- as.matrix(X[,1:(ncol(X)-1)])
 
-		for (i in 1:nTimes){
-	for (p in ML){
+#	for (i in 1:nTimes){
+		for (p in ML){
 			gc()
 			ptm <- proc.time()
 			forest <- fpRerF(X =X, Y = Y, forestType=algName,minParent=1,numCores=p,numTreesInForest=num_trees)
-			#		forest <- RerF(X,Y, trees=num_trees, bagging=.3, min.parent=1, max.depth=0, store.oob=TRUE, stratify=TRUE, num.cores=p, seed=sample(1:100000,1))
 			ptm_hold <- (proc.time() - ptm)[3]
 			resultData <- rbind(resultData, c("p53", algName,p, ptm_hold,i))  
 			rm(forest)
 		}
-	}
+#	}
 
 }
 
