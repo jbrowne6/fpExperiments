@@ -28,7 +28,7 @@ leg <- theme(legend.text = element_text(size = 16), legend.title=element_text(si
 ##############################################################
 ##############################################################
 mydata <- read.csv(file="bench.csv", header=FALSE, sep=",")
-colnames(mydata) <- c("Dataset", "System", "Exper", "NumCores","TrainingTime","NumClasses","NumObs","NumFeats","NumRun")
+colnames(mydata) <- c("Dataset", "System", "Exper", "NumCores","TrainingTime","NumClasses","NumObs","NumFeats","RunNum")
 
 levels(mydata$System) <- factor(c(levels(mydata$System),"fastRF","fastRerF"))
 mydata$System[mydata$System == "rfBase"] <- "fastRF"
@@ -37,7 +37,6 @@ mydata$System[mydata$System == "rerf"] <- "fastRerF"
 maindataTC <- data_summary(mydata[mydata$Exper=="classes",],varname="TrainingTime",groupnames=c("Dataset","System","NumClasses"))
 maindataTO <- data_summary(mydata[mydata$Exper=="observations",],varname="TrainingTime",groupnames=c("Dataset","System","NumObs"))
 maindataTF <- data_summary(mydata[mydata$Exper=="features",],varname="TrainingTime",groupnames=c("Dataset","System","NumFeats"))
-maindataTO <- data_summary(mydata,varname="error",groupnames=c("Dataset","System","NumObs"))
 
 mydata$System <- factor(mydata$System,c("fastRF","fastRerF","LightGBM","Ranger","XGBoost","RF"))
 
