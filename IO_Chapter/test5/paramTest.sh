@@ -1,6 +1,6 @@
 #!/bin/bash
 
-nTimes=1
+nTimes=3
 #start with varying cores
 #echo "writing file"
 #Rscript createDS.R -1 -1 -1
