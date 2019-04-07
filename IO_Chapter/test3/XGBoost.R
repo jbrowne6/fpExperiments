@@ -1,15 +1,15 @@
 library(xgboost)
 library(data.table)
 
-nTimes <- 10
+nTimes <- 2
 num_trees <- 32
 numCores <- 32
 ML <- 32
 p <- 32
 algName <- "XGBoost"
 time <- 0
-#sampSize <- c(250000,500000,750000,1000000,1250000,1500000)
-sampSize <- c(2500,5000,7500,10000)
+sampSize <- c(250000,500000,750000,1000000,1250000,1500000)
+#sampSize <- c(2500,5000,7500,10000)
 
 resultData <- data.frame("MNIST",algName,numCores,time,time,time, stringsAsFactors=FALSE)
 
@@ -23,6 +23,9 @@ x <- x[,c(1:13)]
 num_classes <- length(unique(y))
 
 for(samples in sampSize){
+
+  for (i in 1:nTimes){
+			print(paste("airline ", samples, " , ", i, " , XGBoost "))
   train_ind <- sort(sample(seq_len(nrow(x)),size=samples))
   test_ind <- sort(sample(seq_len(nrow(x)),size=100000))
 
@@ -32,7 +35,6 @@ for(samples in sampSize){
   Xt <- x[test_ind,]
   Yt <- y[test_ind]
 
-  for (i in 1:nTimes){
     gc()
 
     ptm <- proc.time()
@@ -46,6 +48,13 @@ for(samples in sampSize){
 
     resultData <- rbind(resultData, c("airline",algName,samples,ptm_hold,i,error)) 
 
+resultData <- resultData[2:nrow(resultData),]
+#resultData[,1] <- as.factor(resultData[,1])
+#resultData[,2] <- as.factor(resultData[,2])
+resultData[,3] <- as.numeric(resultData[,3])
+resultData[,4] <- as.numeric(resultData[,4])
+
+write.table(resultData, file="bench.csv", col.names=FALSE, row.names=FALSE, append=TRUE, sep=",", quote=FALSE)
     rm(forest)
   }
 }
@@ -60,6 +69,8 @@ x <- x[, (2:ncol(x))]
 num_classes <- length(unique(y))
 
 for(samples in sampSize){
+  for (i in 1:nTimes){
+			print(paste("higgs ", samples, " , ", i, " , XGBoost "))
   train_ind <- sort(sample(seq_len(nrow(x)),size=samples))
   test_ind <- sort(sample(seq_len(nrow(x)),size=100000))
 
@@ -69,7 +80,6 @@ for(samples in sampSize){
   Xt <- x[test_ind,]
   Yt <- y[test_ind]
 
-  for (i in 1:nTimes){
     gc()
 
     ptm <- proc.time()
@@ -83,16 +93,16 @@ for(samples in sampSize){
 
     resultData <- rbind(resultData, c("Higgs 10M",algName,samples,ptm_hold,i,error)) 
 
+resultData <- resultData[2:nrow(resultData),]
+#resultData[,1] <- as.factor(resultData[,1])
+#resultData[,2] <- as.factor(resultData[,2])
+resultData[,3] <- as.numeric(resultData[,3])
+resultData[,4] <- as.numeric(resultData[,4])
+
+write.table(resultData, file="bench.csv", col.names=FALSE, row.names=FALSE, append=TRUE, sep=",", quote=FALSE)
     rm(forest)
   }
 }
 
 
 
-resultData <- resultData[2:nrow(resultData),]
-resultData[,1] <- as.factor(resultData[,1])
-resultData[,2] <- as.factor(resultData[,2])
-resultData[,3] <- as.numeric(resultData[,3])
-resultData[,4] <- as.numeric(resultData[,4])
-
-write.table(resultData, file="bench.csv", col.names=FALSE, row.names=FALSE, append=TRUE, sep=",", quote=FALSE)
