@@ -4,11 +4,11 @@ library(data.table)
 
 nTimes <- 2
 num_trees <- 512
-numCores <- 32
+numCores <- 16
 ML <- numCores
 algName <- "hello"
-#nTree <- c(1,2,4,8,16,32)
-nTree <- c(1,2)
+nTree <- c(1,2,4,8,16,32)
+#nTree <- c(1,2)
 time <- 0
 
 resultData <- data.frame("MNIST",algName, numCores, time, time, stringsAsFactors=FALSE)
@@ -28,10 +28,10 @@ for (tMult in nTree){
 		print(paste("XGB mnist ", tMult, " , ", i, " test4"))
 		for (p in ML){
 			gc()
-			forest <- xgboost(data=X, label=Y, objective="multi:softprob",nrounds=num_trees,colsample_bynode=sqrt(nrow(X))/nrow(X), num_class=num_classes, nthread=p)
+			forest <- xgboost(data=X, label=Y, objective="multi:softprob",nrounds=num_trees,colsample_bynode=sqrt(nrow(X))/nrow(X), num_class=num_classes, max.depth=12,nthread=p)
 
 			ptm <- proc.time()
-			pred <- predict(forest, X) 
+			pred <- predict(forest, X, ntreelimit=num_trees) 
 			pred <- matrix(pred, ncol=num_classes, byrow=TRUE) 
 			pred_labels <- max.col(pred) - 1
 			ptm_hold <- (proc.time() - ptm)[3]
@@ -65,10 +65,10 @@ for (tMult in nTree){
 		print(paste("XGB higgs ", tMult, " , ", i, " test4"))
 		for (p in ML){
 			gc()
-			forest <- xgboost(data=X, label=Y, objective="multi:softprob",nrounds=num_trees,colsample_bynode=sqrt(nrow(X))/nrow(X), num_class=num_classes, nthread=p)
+			forest <- xgboost(data=X, label=Y, objective="multi:softprob",nrounds=num_trees,colsample_bynode=sqrt(nrow(X))/nrow(X), num_class=num_classes, max.depth=12,nthread=p)
 
 			ptm <- proc.time()
-			pred <- predict(forest, X) 
+			pred <- predict(forest, X, ntreelimit=num_trees) 
 			pred <- matrix(pred, ncol=num_classes, byrow=TRUE) 
 			pred_labels <- max.col(pred) - 1
 			ptm_hold <- (proc.time() - ptm)[3]
@@ -101,10 +101,10 @@ for (tMult in nTree){
 		print(paste("XGB p53 ", tMult, " , ", i, " test4"))
 		for (p in ML){
 			gc()
-			forest <- xgboost(data=X, label=Y, objective="multi:softprob",nrounds=num_trees,colsample_bynode=sqrt(nrow(X))/nrow(X), num_class=num_classes, nthread=p)
+			forest <- xgboost(data=X, label=Y, objective="multi:softprob",nrounds=num_trees,colsample_bynode=sqrt(nrow(X))/nrow(X), num_class=num_classes, max.depth=12, nthread=p)
 
 			ptm <- proc.time()
-			pred <- predict(forest, X) 
+			pred <- predict(forest, X, ntreelimit=num_trees) 
 			pred <- matrix(pred, ncol=num_classes, byrow=TRUE) 
 			pred_labels <- max.col(pred) - 1
 			ptm_hold <- (proc.time() - ptm)[3]

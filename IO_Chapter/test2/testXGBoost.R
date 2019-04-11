@@ -1,7 +1,14 @@
+args = commandArgs()
+if (length(args)!=6) {
+	  stop("one argument must be supplied.")
+} else {
+nTimes = as.integer(args[6])
+}
+
 library(xgboost)
 library(data.table)
 
-nTimes <- 1
+#nTimes <- 1
 
 num_trees <- 96 
 ML <- c(1,2,4,8,16,32,48)

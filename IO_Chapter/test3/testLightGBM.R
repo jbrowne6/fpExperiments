@@ -8,8 +8,7 @@ ML <- 32
 p <- 32
 algName <- "LightGBM"
 time <- 0
-sampSize <- c(250000,500000,750000,1000000,1250000,1500000)
-#sampSize <- c(2500,5000,7500,10000)
+sampSize <- c(500000,1000000,1500000,2000000,2500000,3000000)
 
 resultData <- data.frame("MNIST",algName,numCores,time,time,time, stringsAsFactors=FALSE)
 
@@ -40,7 +39,7 @@ for(samples in sampSize){
 		gc()
 
 		ptm <- proc.time()
-		forest <- lgb.train(data=dtrain, objective="multiclass",num_class=num_classes,learning_rate=.1,nrounds=num_trees, nthread=p,early_stopping_rounds=0)
+		forest <- lgb.train(data=dtrain, objective="multiclass",num_class=num_classes,learning_rate=.1,nrounds=num_trees, nthread=p,early_stopping_rounds=0, num_leaves= 2^(10))
 		ptm_hold <- (proc.time() - ptm)[3]
 
 		pred <- predict(forest, Xt, reshape=TRUE) 
@@ -92,7 +91,7 @@ for(samples in sampSize){
 		gc()
 
 		ptm <- proc.time()
-		forest <- lgb.train(data=dtrain, objective="multiclass",num_class=num_classes,learning_rate=.1,nrounds=num_trees, nthread=p,early_stopping_rounds=0)
+		forest <- lgb.train(data=dtrain, objective="multiclass",num_class=num_classes,learning_rate=.1,nrounds=num_trees, nthread=p,early_stopping_rounds=0, num_leaves= 2^(10))
 		ptm_hold <- (proc.time() - ptm)[3]
 
 		pred <- predict(forest, Xt, reshape=TRUE) 

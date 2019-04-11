@@ -1,10 +1,8 @@
 #!/bin/bash
+nTime=1
+mv bench.csv bench.csv.old
 
-for nTime in 1 2 
-do
-	Rscript testFastRF.R $nTime
-done
-
-Rscript testRanger.R
-Rscript testLightGBM.R
-Rscript testXGBoost.R
+Rscript testFastRF.R $nTime >> test2.log 2>&1
+Rscript testRanger.R $nTime >> test2.log 2>&1
+Rscript testLightGBM.R $nTime >> test2.log 2>&1
+Rscript testXGBoost.R $nTime >> test2.log 2>&1

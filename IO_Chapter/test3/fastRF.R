@@ -8,8 +8,7 @@ ML <- 32
 p <- 32
 algName <- "hello"
 time <- 0
-sampSize <- c(250000,500000,750000,1000000,1250000,1500000)
-#sampSize <- c(2500,5000,7500,10000)
+sampSize <- c(500000,1000000,1500000,2000000,2500000,3000000)
 
 resultData <- data.frame("MNIST",algName,numCores,time,time,time, stringsAsFactors=FALSE)
 

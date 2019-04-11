@@ -1,7 +1,14 @@
+args = commandArgs()
+if (length(args)!=6) {
+	  stop("one argument must be supplied.")
+} else {
+nTimes = as.integer(args[6])
+}
+
 library(lightgbm)
 library(data.table)
 
-nTimes <- 2
+#nTimes <- 2
 
 num_trees <- 96
 ML <- c(1,2,4,8,16,32,48)
@@ -29,7 +36,7 @@ for (i in 1:nTimes){
 	for (p in ML){
 		gc()
 		ptm <- proc.time()
-		forest <- lgb.train(data=dtrain, objective="multiclass", num_class=num_classes,learning_rate=.1,nrounds=num_trees, nthread=p)
+		forest <- lgb.train(data=dtrain, objective="multiclass", num_class=num_classes,learning_rate=.1,nrounds=num_trees, nthread=p, num_leaves= nrow(X)/10)
 		ptm_hold <- (proc.time() - ptm)[3]
 		resultData <- rbind(resultData, c("MNIST", algorithm,p, ptm_hold,i)) 
 	}
@@ -50,7 +57,7 @@ for (i in 1:nTimes){
 	for (p in ML){
 		gc()
 		ptm <- proc.time()
-		forest <- lgb.train(data=dtrain, objective="multiclass",num_class=num_classes,learning_rate=.1,nrounds=num_trees, nthread=p)
+		forest <- lgb.train(data=dtrain, objective="multiclass",num_class=num_classes,learning_rate=.1,nrounds=num_trees, nthread=p, num_leaves= nrow(X)/10)
 		ptm_hold <- (proc.time() - ptm)[3]
 		resultData <- rbind(resultData, c("higgs",algorithm,p, ptm_hold,i)) 
 	}
@@ -73,7 +80,7 @@ for (i in 1:nTimes){
 	for (p in ML){
 		gc()
 		ptm <- proc.time()
-		forest <- lgb.train(data=dtrain, objective="multiclass", num_class=num_classes,learning_rate=.1,nrounds=num_trees, nthread=p)
+		forest <- lgb.train(data=dtrain, objective="multiclass", num_class=num_classes,learning_rate=.1,nrounds=num_trees, nthread=p, num_leaves= nrow(X)/10)
 		ptm_hold <- (proc.time() - ptm)[3]
 		resultData <- rbind(resultData, c("p53",algorithm,p, ptm_hold,i)) 
 	}

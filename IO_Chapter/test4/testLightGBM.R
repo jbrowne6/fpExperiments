@@ -9,7 +9,7 @@ ML <- c(32)
 nTree <- c(1,2)
 nTree <- c(1,2,4,8,16,32)
 algorithm <- "lightGBM"
-numCores <- 32
+numCores <- 16
 time <- 0
 
 resultData <- data.frame("MNIST", algorithm, numCores, time,time, stringsAsFactors=FALSE)
@@ -30,10 +30,10 @@ for (tMult in nTree){
 		print(paste("light higgs ", tMult, " , ", i, " test4"))
 		for (p in ML){
 			gc()
-			forest <- lgb.train(data=dtrain, objective="multiclass",min_data_in_leaf = 1, num_class=num_classes,learning_rate=.1,nrounds=num_trees, nthread=p)
+			forest <- lgb.train(data=dtrain, objective="multiclass",min_data_in_leaf = 1, num_class=num_classes,learning_rate=.1,nrounds=num_trees, nthread=p, num_leaves= 2^(12))
 
 			ptm <- proc.time()
-			pred <- predict(forest, X, reshape=TRUE) 
+			pred <- predict(forest, X, reshape=TRUE, num_iteration_predict=num_trees, pred_early_stop=FALSE, pred_early_stop_freq=num_trees) 
 			pred <- matrix(pred, ncol=num_classes, byrow=TRUE) 
 			pred_labels <- max.col(pred) - 1
 			ptm_hold <- (proc.time() - ptm)[3]
@@ -67,10 +67,10 @@ for (tMult in nTree){
 		print(paste("light p53 ", tMult, " , ", i, " test4"))
 		for (p in ML){
 			gc()
-			forest <- lgb.train(data=dtrain, objective="multiclass",num_class=num_classes,learning_rate=.1,nrounds=num_trees, nthread=p)
+			forest <- lgb.train(data=dtrain, objective="multiclass",num_class=num_classes,learning_rate=.1,nrounds=num_trees, nthread=p, num_leaves= 2^(12))
 
 			ptm <- proc.time()
-			pred <- predict(forest, X, reshape=TRUE) 
+			pred <- predict(forest, X, reshape=TRUE, num_iteration_predict=num_trees, pred_early_stop=FALSE, pred_early_stop_freq=num_trees) 
 			pred <- matrix(pred, ncol=num_classes, byrow=TRUE) 
 			pred_labels <- max.col(pred) - 1
 			ptm_hold <- (proc.time() - ptm)[3]
@@ -109,11 +109,11 @@ for (tMult in nTree){
 		for (p in ML){
 			gc()
 			ptm <- proc.time()
-			forest <- lgb.train(data=dtrain, objective="multiclass",num_class=num_classes,learning_rate=.1,nrounds=num_trees, nthread=p,early_stopping_rounds=0)
+			forest <- lgb.train(data=dtrain, objective="multiclass",num_class=num_classes,learning_rate=.1,nrounds=num_trees, nthread=p,early_stopping_rounds=0, num_leaves= 2^(12))
 			ptm_hold <- (proc.time() - ptm)[3]
 
 			ptm <- proc.time()
-			pred <- predict(forest, X) 
+			pred <- predict(forest, X, reshape=TRUE, num_iteration_predict=num_trees, pred_early_stop=FALSE, pred_early_stop_freq=num_trees) 
 			#pred <- predict(forest, X, reshape=TRUE) 
 			#pred <- matrix(pred, ncol=num_classes, byrow=TRUE) 
 			#pred_labels <- max.col(pred) - 1

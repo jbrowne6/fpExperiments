@@ -4,11 +4,11 @@ if (length(args)!=12) {
 } else {
 	dataset = args[6]
 	numThreads = as.integer(args[7])
-nTimes = as.integer(args[8])
-nClass = as.integer(args[9])
-nSamples = as.integer(args[10])
-nfeats = as.integer(args[11])
-testName = as.character(args[12])
+	nTimes = as.integer(args[8])
+	nClass = as.integer(args[9])
+	nSamples = as.integer(args[10])
+	nfeats = as.integer(args[11])
+	testName = as.character(args[12])
 }
 
 library(lightgbm)
@@ -24,6 +24,7 @@ time <- 0
 resultData <- data.frame(as.character(dataset), algorithm, time, time,time,time,time,time, stringsAsFactors=FALSE)
 
 
+print("Delete this, I'm here")
 if(dataset == "mnist"){
 	#####################################################
 	#########                MNIST
@@ -97,14 +98,15 @@ if(dataset == "svhn"){
 	####################################################
 	##########             svhn 
 	####################################################
-Y <- as.numeric(fread(file="temp_label.csv", header=FALSE, sep=",")$V1)
-  if(min(Y) != 0){
-    Y <- Y -1
-  }
-  if(min(Y) != 0){
-    stop("dataset does not contain 0, fastRF")
-  }
+	Y <- as.numeric(fread(file="temp_label.csv", header=FALSE, sep=",")$V1)
+	if(min(Y) != 0){
+		Y <- Y -1
+	}
+	if(min(Y) != 0){
+		stop("dataset does not contain 0, fastRF")
+	}
 
+print("Delete this, I'm here 2")
 
 	dtrain <- lgb.Dataset(data=as.matrix(fread(file="temp_data.csv", header=FALSE, sep=",")),
 												label=Y)
@@ -114,8 +116,10 @@ Y <- as.numeric(fread(file="temp_label.csv", header=FALSE, sep=",")$V1)
 	for (p in ML){
 		for (i in 1:nTimes){
 			gc()
+
+print("Delete this, I'm here 3")
 			ptm <- proc.time()
-			forest <- lgb.train(data=dtrain,objective="multiclass",nrounds=num_trees, num_class=num_classes, nthread=p)
+			forest <- lgb.train(data=dtrain,objective="multiclass",nrounds=num_trees, num_class=num_classes, nthread=p,learning_rate=.1,num_leaves= 2^(30),early_stopping_rounds=0)
 			ptm_hold <- (proc.time() - ptm)[3]
 			resultData <- rbind(resultData, c(dataset,"LightGBM",testName,p, ptm_hold,nClass,nSamples,nfeats,i))  
 			rm(forest)

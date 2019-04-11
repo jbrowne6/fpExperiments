@@ -2,7 +2,7 @@ args = commandArgs()
 if (length(args)!=6) {
 	  stop("one argument must be supplied.")
 } else {
-i = as.integer(args[6])
+nTimes = as.integer(args[6])
 }
 library(rerf)
 library(data.table)
@@ -19,7 +19,7 @@ time <- 0
 
 resultData <- data.frame(as.character(dataset), algorithm, numCores, time,time, stringsAsFactors=FALSE)
 
-for(algName in c("rfBase","rerf")){
+for(algName in c("binnedBase","binnedBaseRerF")){
 
 	#####################################################
 	#########                MNIST
@@ -29,7 +29,7 @@ for(algName in c("rfBase","rerf")){
 	X <- X[, (2:785)]
 
 
-#	for (i in 1:nTimes){
+	for (i in 1:nTimes){
 		for (p in ML){
 			gc()
 			ptm <- proc.time()
@@ -39,7 +39,7 @@ for(algName in c("rfBase","rerf")){
 			resultData <- rbind(resultData, c("MNIST", algName,p, ptm_hold,i)) 
 			rm(forest)
 		}
-#	}
+	}
 
 
 
@@ -50,7 +50,7 @@ for(algName in c("rfBase","rerf")){
 	Y <- as.integer(X[,1]-1)
 	X <- X[, c(2:32)]
 
-#	for (i in 1:nTimes){
+	for (i in 1:nTimes){
 		for (p in ML){
 			gc()
 			ptm <- proc.time()
@@ -60,7 +60,7 @@ for(algName in c("rfBase","rerf")){
 			resultData <- rbind(resultData, c("higgs", algName,p, ptm_hold,i)) 
 			rm(forest)
 		}
-#	}
+	}
 
 	####################################################
 	##########             P53 
@@ -69,7 +69,7 @@ for(algName in c("rfBase","rerf")){
 	Y <- as.integer(X[,ncol(X)]-1)
 	X <- as.matrix(X[,1:(ncol(X)-1)])
 
-#	for (i in 1:nTimes){
+	for (i in 1:nTimes){
 		for (p in ML){
 			gc()
 			ptm <- proc.time()
@@ -78,7 +78,7 @@ for(algName in c("rfBase","rerf")){
 			resultData <- rbind(resultData, c("p53", algName,p, ptm_hold,i))  
 			rm(forest)
 		}
-#	}
+	}
 
 }
 

@@ -3,7 +3,7 @@ library(data.table)
 
 nTimes <- 2
 num_trees <- 512
-numCores <- 32
+numCores <- 16
 ML <- numCores
 algName <- "hello"
 nTree <- c(1,2)
