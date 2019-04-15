@@ -8,7 +8,7 @@ ML <- c(1,2,4,8,16,32)
 numCores <- 0
 time <- 0
 
-resultData <- data.frame("MNIST","binnedBaseRerF", numCores,time,time,time,time,time, stringsAsFactors=FALSE)
+resultData <- data.frame("MNIST","binnedBaseRerF", numCores,time,time,time, stringsAsFactors=FALSE)
 
 
 #####################################################
@@ -40,20 +40,21 @@ close(image_block)
 close(label_block)
 
 
-#for (alg in c("rerf","rfBase")){
-for (alg in c("rfBase")){
+
+for (i in 1:nTimes){
 	for (p in ML){
-		for (i in 1:nTimes){
+		for (alg in c("binnedBase","rfBase")){
 			gc()
 			ptm <- proc.time()
-			forest <- fpRerF(X =X, Y = Y, forestType=,minParent=1,numTreesInForest=num_trees,numCores=p)
-			#forest <- fpRerF(X =X, Y = Y, forestType="rfBase",minParent=1,numTreesInForest=num_trees,numCores=p,nodeSizeToBin=binSize, nodeSizeBin=binSize )
+			forest <- fpRerF(X =X, Y = Y, forestType=alg,minParent=1,numTreesInForest=num_trees,numCores=p)
 			ptm_hold <- (proc.time() - ptm)[3]
 
+			ptm <- proc.time()
 			predictions <- fpPredict(forest, Xt)
 			error <- sum(predictions==Yt)/length(Yt)
+			ptm_hold_error <- (proc.time() - ptm)[3]
 
-			resultData <- rbind(resultData, c("MNIST", alg,p, ptm_hold,error, 0,0,i)) 
+			resultData <- rbind(resultData, c("MNIST",alg,p,ptm_hold,ptm_hold_error,i)) 
 
 			resultData <- resultData[2:nrow(resultData),]
 			resultData[,1] <- as.factor(resultData[,1])
@@ -62,41 +63,7 @@ for (alg in c("rfBase")){
 			resultData[,4] <- as.numeric(resultData[,4])
 
 			write.table(resultData, file="bench.csv", col.names=FALSE, row.names=FALSE, append=TRUE, sep=",", quote=FALSE)
-
 			rm(forest)
 		}
 	}
 }
-
-
-
-
-for (alg in c("rfBase")){
-#for (alg in c("rerf","rfBase")){
-	for (p in ML){
-		for (binSize in c(10,50,100,200)){
-			for (i in 1:nTimes){
-				gc()
-				ptm <- proc.time()
-				forest <- fpRerF(X =X, Y = Y, forestType=alg,minParent=1,numTreesInForest=num_trees,numCores=p,nodeSizeToBin=binSize, nodeSizeBin=binSize )
-				#forest <- fpRerF(X =X, Y = Y, forestType="rfBase",minParent=1,numTreesInForest=num_trees,numCores=p,nodeSizeToBin=binSize, nodeSizeBin=binSize )
-				ptm_hold <- (proc.time() - ptm)[3]
-
-				predictions <- fpPredict(forest, Xt)
-				error <- sum(predictions==Yt)/length(Yt)
-
-				resultData <- rbind(resultData, c("MNIST", alg,p, ptm_hold,error, binSize,binSize,i)) 
-
-				resultData <- resultData[2:nrow(resultData),]
-				resultData[,1] <- as.factor(resultData[,1])
-				resultData[,2] <- as.factor(resultData[,2])
-				resultData[,3] <- as.numeric(resultData[,3])
-				resultData[,4] <- as.numeric(resultData[,4])
-
-				write.table(resultData, file="bench.csv", col.names=FALSE, row.names=FALSE, append=TRUE, sep=",", quote=FALSE)
-				rm(forest)
-			}
-		}
-	}
-}
-

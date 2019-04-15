@@ -14,8 +14,8 @@ data_summary <- function(data, varname, groupnames){
 			     return(data_sum)
 }
 
-plotText <- 16
-leg <- theme(legend.text = element_text(size = 10), legend.title=element_text(size = plotText), plot.title = element_text(size = plotText,  face="bold"), plot.subtitle = element_text(size = plotText),axis.title.x = element_text(size=12), axis.text.x = element_text(size=plotText), axis.title.y = element_text(size=plotText), axis.text.y = element_text(size=plotText))
+plotText <- 20
+leg <- theme(legend.text = element_text(size = 12), legend.title=element_text(size = 18), plot.title = element_text(size = plotText,  face="bold"), plot.subtitle = element_text(size = plotText),axis.title.x = element_text(size=plotText), axis.text.x = element_text(size=plotText), axis.title.y = element_text(size=plotText), axis.text.y = element_text(size=plotText))
 
 
 mydata <- read.csv(file="bench.csv", header=FALSE, sep=",")
@@ -37,7 +37,7 @@ p1 <- p1 + scale_y_continuous(trans='log10')
 p1 <- p1 + scale_x_continuous(trans='log2')
 #p1 <- p1 + facet_grid(Dataset ~ ., scales = "free_y")
 p1 <- p1 + theme(legend.position="bottom")
-p1 <- p1 + guides(color=guide_legend(title="Subsample Size"))
+p1 <- p1 + guides(color=guide_legend(title="Subsample Size",title.position = "top"))
 
 
 
@@ -69,22 +69,26 @@ p2 <- p2 + geom_line(data=DataSummaryTE, aes(x=binSize, y=error,color=BinType),s
 p2 <- p2 + geom_line(data=DataTE, aes(x=binSize,y=error,color=BinType,group=interaction(RunNum,Threads,BinType)),size=0.3,alpha=0.3)
 p2 <- p2 + guides(fill=FALSE)
 p2 <- p2 + labs(x = "Subsample Size", y = "Test Set Accuracy")
+p2 <- p2 + theme(legend.position="bottom")
+p2 <- p2 +guides(colour = guide_legend(title.position = "top"))
 #p2 <- p2 + scale_color_manual(name=" ", values=c("fastRF"="#e41a1c", "fastRerF"="#377eb8", "LightGBM"="#984ea3", "Ranger"="#ff7f00", "XGBoost"="#ffff33", "RF"="#4daf4a", "Ideal"="black"))
 p2 <- p2 + leg
 
-combined <- FALSE
+
+combined <- TRUE
 
 if(combined){
+
 g_legend<-function(a.gplot){
 	  tmp <- ggplot_gtable(ggplot_build(a.gplot))
   leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
 	  legend <- tmp$grobs[[leg]]
-	  return(legend)}
+	  return(legend)
+}
 
-mylegend<-g_legend(p1)
 
-pdf("test3Combined.pdf", height=5, width=5)
-grid.arrange(arrangeGrob(p1 + theme(legend.position="none"), p2 + theme(legend.position="none"), nrow=1), mylegend, nrow=2,heights=c(10, 1))
+pdf("test3Combined.pdf", height=5, width=10)
+grid.arrange(arrangeGrob(p1,p2,nrow=1))
 dev.off()
 
 
