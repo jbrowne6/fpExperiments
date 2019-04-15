@@ -21,10 +21,9 @@ ML <- numThreads
 algorithm <- "lightGBM"
 time <- 0
 
-resultData <- data.frame(as.character(dataset), algorithm, time, time,time,time,time,time, stringsAsFactors=FALSE)
+resultData <- data.frame(as.character(dataset), algorithm, time, time,time,time,time,time,time, stringsAsFactors=FALSE)
 
 
-print("Delete this, I'm here")
 if(dataset == "mnist"){
 	#####################################################
 	#########                MNIST
@@ -106,7 +105,6 @@ if(dataset == "svhn"){
 		stop("dataset does not contain 0, fastRF")
 	}
 
-print("Delete this, I'm here 2")
 
 	dtrain <- lgb.Dataset(data=as.matrix(fread(file="temp_data.csv", header=FALSE, sep=",")),
 												label=Y)
@@ -117,9 +115,8 @@ print("Delete this, I'm here 2")
 		for (i in 1:nTimes){
 			gc()
 
-print("Delete this, I'm here 3")
 			ptm <- proc.time()
-			forest <- lgb.train(data=dtrain,objective="multiclass",nrounds=num_trees, num_class=num_classes, nthread=p,learning_rate=.1,num_leaves= 2^(30),early_stopping_rounds=0)
+			forest <- lgb.train(data=dtrain,objective="multiclass",nrounds=num_trees, num_class=num_classes, nthread=p,learning_rate=.1, early_stopping_rounds=0)
 			ptm_hold <- (proc.time() - ptm)[3]
 			resultData <- rbind(resultData, c(dataset,"LightGBM",testName,p, ptm_hold,nClass,nSamples,nfeats,i))  
 			rm(forest)

@@ -36,7 +36,7 @@ for (i in 1:nTimes){
 	for (p in ML){
 		gc()
 		ptm <- proc.time()
-		forest <- lgb.train(data=dtrain, objective="multiclass", num_class=num_classes,learning_rate=.1,nrounds=num_trees, nthread=p, num_leaves= nrow(X)/10)
+		forest <- lgb.train(data=dtrain, objective="multiclass", num_class=num_classes,nrounds=num_trees, nthread=p)
 		ptm_hold <- (proc.time() - ptm)[3]
 		resultData <- rbind(resultData, c("MNIST", algorithm,p, ptm_hold,i)) 
 	}
@@ -57,9 +57,14 @@ for (i in 1:nTimes){
 	for (p in ML){
 		gc()
 		ptm <- proc.time()
-		forest <- lgb.train(data=dtrain, objective="multiclass",num_class=num_classes,learning_rate=.1,nrounds=num_trees, nthread=p, num_leaves= nrow(X)/10)
+		forest <- lgb.train(data=dtrain, objective="multiclass",num_class=num_classes,nrounds=num_trees, nthread=p)
 		ptm_hold <- (proc.time() - ptm)[3]
 		resultData <- rbind(resultData, c("higgs",algorithm,p, ptm_hold,i)) 
+
+			rm(forest)
+resultData <- resultData[2:nrow(resultData),]
+
+write.table(resultData, file="bench.csv", col.names=FALSE, row.names=FALSE, append=TRUE, sep=",", quote=FALSE)
 	}
 }
 
@@ -80,9 +85,15 @@ for (i in 1:nTimes){
 	for (p in ML){
 		gc()
 		ptm <- proc.time()
-		forest <- lgb.train(data=dtrain, objective="multiclass", num_class=num_classes,learning_rate=.1,nrounds=num_trees, nthread=p, num_leaves= nrow(X)/10)
+		forest <- lgb.train(data=dtrain, objective="multiclass", num_class=num_classes,nrounds=num_trees, nthread=p)
 		ptm_hold <- (proc.time() - ptm)[3]
 		resultData <- rbind(resultData, c("p53",algorithm,p, ptm_hold,i)) 
+
+			rm(forest)
+resultData <- resultData[2:nrow(resultData),]
+
+write.table(resultData, file="bench.csv", col.names=FALSE, row.names=FALSE, append=TRUE, sep=",", quote=FALSE)
+
 	}
 }
 
@@ -104,6 +115,11 @@ if(FALSE){
 			forest <- lgb.train(data=dtrain, objective="multiclass",nrounds=num_trees, num_class=num_classes, nthread=p)
 			ptm_hold <- (proc.time() - ptm)[3]
 			resultData <- rbind(resultData, c(dataset, algName,p, ptm_hold),nClass,nSamples,nfeats)  
+
+resultData <- resultData[2:nrow(resultData),]
+
+write.table(resultData, file="bench.csv", col.names=FALSE, row.names=FALSE, append=TRUE, sep=",", quote=FALSE)
+
 			rm(forest)
 		}
 	}
@@ -112,11 +128,4 @@ if(FALSE){
 
 
 
-resultData <- resultData[2:nrow(resultData),]
-resultData[,1] <- as.factor(resultData[,1])
-resultData[,2] <- as.factor(resultData[,2])
-resultData[,3] <- as.numeric(resultData[,3])
-resultData[,4] <- as.numeric(resultData[,4])
-resultData[,4] <- as.numeric(resultData[,4])
 
-write.table(resultData, file="bench.csv", col.names=FALSE, row.names=FALSE, append=TRUE, sep=",", quote=FALSE)

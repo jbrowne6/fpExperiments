@@ -110,7 +110,7 @@ if(min(Y) != 0){
     for (i in 1:nTimes){
       gc()
       ptm <- proc.time()
-      forest <- xgboost(data=X, label=Y, objective="multi:softmax",nrounds=num_trees,colsample_bynode=ceiling(sqrt(ncol(X)))/ncol(X), num_class=num_classes, nthread=p)
+      forest <- xgboost(data=X, label=Y, objective="multi:softmax",nrounds=num_trees,colsample_bynode=ceiling(sqrt(ncol(X)))/ncol(X), num_class=num_classes, nthread=p,max_depth=20)
       ptm_hold <- (proc.time() - ptm)[3]
       resultData <- rbind(resultData, c(dataset, "XGBoost",testName,p, ptm_hold,nClass,nSamples,nfeats,i))
       rm(forest)

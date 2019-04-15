@@ -1,0 +1,168 @@
+Loading required package: Rcpp
+[1] "airline  5e+05  ,  1  ,  rfBase"
+starting tree 1
+max depth: 51
+avg depth: 23.4378
+num leaf nodes: 3230151
+[1] "airline  5e+05  ,  1  ,  rerf"
+starting tree 1 done growing forest.
+max depth: 61
+avg depth: 25.2017
+num leaf nodes: 3435676
+[1] "airline  5e+05  ,  2  ,  rfBase"
+starting tree 1
+max depth: 52
+avg depth: 23.5123
+num leaf nodes: 3265245
+[1] "airline  5e+05  ,  2  ,  rerf"
+starting tree 1 done growing forest.
+max depth: 59
+avg depth: 25.2166
+num leaf nodes: 3442131
+[1] "airline  1e+06  ,  1  ,  rfBase"
+starting tree 1
+max depth: 58
+avg depth: 24.9377
+num leaf nodes: 6490558
+[1] "airline  1e+06  ,  1  ,  rerf"
+starting tree 1 done growing forest.
+max depth: 62
+avg depth: 26.7273
+num leaf nodes: 6838157
+[1] "airline  1e+06  ,  2  ,  rfBase"
+starting tree 1
+max depth: 55
+avg depth: 24.9714
+num leaf nodes: 6484091
+[1] "airline  1e+06  ,  2  ,  rerf"
+starting tree 1 done growing forest.
+max depth: 64
+avg depth: 26.5497
+num leaf nodes: 6852322
+[1] "airline  1500000  ,  1  ,  rfBase"
+starting tree 1
+max depth: 58
+avg depth: 25.6422
+num leaf nodes: 9683599
+[1] "airline  1500000  ,  1  ,  rerf"
+starting tree 1 done growing forest.
+max depth: 62
+avg depth: 27.5182
+num leaf nodes: 10193207
+[1] "airline  1500000  ,  2  ,  rfBase"
+starting tree 1
+max depth: 58
+avg depth: 25.8042
+num leaf nodes: 9725986
+[1] "airline  1500000  ,  2  ,  rerf"
+starting tree 1 done growing forest.
+max depth: 64
+avg depth: 27.5081
+num leaf nodes: 10153967
+[1] "airline  2e+06  ,  1  ,  rfBase"
+starting tree 1
+max depth: 59
+avg depth: 26.1397
+num leaf nodes: 12866332
+[1] "airline  2e+06  ,  1  ,  rerf"
+starting tree 1 done growing forest.
+max depth: 68
+avg depth: 28.2022
+num leaf nodes: 13469751
+[1] "airline  2e+06  ,  2  ,  rfBase"
+starting tree 1
+max depth: 61
+avg depth: 26.2309
+num leaf nodes: 12898698
+[1] "airline  2e+06  ,  2  ,  rerf"
+starting tree 1 done growing forest.
+max depth: 68
+avg depth: 28.0308
+num leaf nodes: 13512988
+[1] "airline  2500000  ,  1  ,  rfBase"
+starting tree 1
+max depth: 60
+avg depth: 26.6482
+num leaf nodes: 16081240
+[1] "airline  2500000  ,  1  ,  rerf"
+starting tree 1 done growing forest.
+max depth: 63
+avg depth: 28.2781
+num leaf nodes: 16802615
+[1] "airline  2500000  ,  2  ,  rfBase"
+starting tree 1
+max depth: 59
+avg depth: 26.4952
+num leaf nodes: 16053705
+[1] "airline  2500000  ,  2  ,  rerf"
+starting tree 1 done growing forest.
+max depth: 70
+avg depth: 28.4685
+num leaf nodes: 16722685
+[1] "airline  3e+06  ,  1  ,  rfBase"
+starting tree 1
+max depth: 61
+avg depth: 27.1119
+num leaf nodes: 19180313
+[1] "airline  3e+06  ,  1  ,  rerf"
+starting tree 1 done growing forest.
+max depth: 71
+avg depth: 29.0461
+num leaf nodes: 19946966
+[1] "airline  3e+06  ,  2  ,  rfBase"
+starting tree 1
+max depth: 57
+avg depth: 26.917
+num leaf nodes: 19214743
+[1] "airline  3e+06  ,  2  ,  rerf"
+starting tree 1 done growing forest.
+max depth: 69
+avg depth: 28.8115
+num leaf nodes: 19812283
+[1] "higgs  5e+05  ,  1  ,  rfBase"
+starting tree 1
+max depth: 54
+avg depth: 22.5755
+num leaf nodes: 2180541
+[1] "higgs  5e+05  ,  1  ,  rerf"
+starting tree 1 done growing forest.
+max depth: 59
+avg depth: 24.2095
+num leaf nodes: 2499826
+[1] "higgs  5e+05  ,  2  ,  rfBase"
+starting tree 1
+max depth: 58
+avg depth: 22.4753
+num leaf nodes: 2181262
+[1] "higgs  5e+05  ,  2  ,  rerf"
+starting tree 1 done growing forest.
+max depth: 64
+avg depth: 24.2367
+num leaf nodes: 2504909
+[1] "higgs  1e+06  ,  1  ,  rfBase"
+starting tree 1
+max depth: 62
+avg depth: 24.005
+num leaf nodes: 4315778
+[1] "higgs  1e+06  ,  1  ,  rerf"
+starting tree 1 done growing forest.
+max depth: 66
+avg depth: 25.8744
+num leaf nodes: 4952297
+[1] "higgs  1e+06  ,  2  ,  rfBase"
+starting tree 1
+max depth: 61
+avg depth: 24.1151
+num leaf nodes: 4313800
+[1] "higgs  1e+06  ,  2  ,  rerf"
+starting tree 1 done growing forest.
+max depth: 67
+avg depth: 25.8229
+num leaf nodes: 4944754
+[1] "higgs  1500000  ,  1  ,  rfBase"
+starting tree 1
+max depth: 64
+avg depth: 24.7394
+num leaf nodes: 6433726
+[1] "higgs  1500000  ,  1  ,  rerf"
+starting tree 1

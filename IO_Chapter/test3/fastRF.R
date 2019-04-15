@@ -42,7 +42,7 @@ for(samples in sampSize){
 			gc()
 			ptm <- proc.time()
 			#forest <- fpRerF(X=X, Y=Y, forestType=algName,minParent=1,numTreesInForest=num_trees,numCores=p)
-			forest <- fpRerF(X =X, Y = Y, forestType=algName,minParent=1,numTreesInForest=num_trees,numCores=p,nodeSizeToBin=500, nodeSizeBin=500)
+			forest <- fpRerF(X =X, Y = Y, forestType=algName,minParent=1,numTreesInForest=num_trees,numCores=p,nodeSizeToBin=5000, nodeSizeBin=5000)
 			ptm_hold <- (proc.time() - ptm)[3]
 
 			predictions <- fpPredict(forest, Xt)
@@ -89,7 +89,7 @@ for(samples in sampSize){
 
 			ptm <- proc.time()
 			#forest <- fpRerF(X =X, Y = Y, forestType=algName,minParent=1,numTreesInForest=num_trees,numCores=p)
-			forest <- fpRerF(X =X, Y = Y, forestType=algName,minParent=1,numTreesInForest=num_trees,numCores=p,nodeSizeToBin=500, nodeSizeBin=500)
+			forest <- fpRerF(X =X, Y = Y, forestType=algName,minParent=1,numTreesInForest=num_trees,numCores=p,nodeSizeToBin=5000, nodeSizeBin=5000)
 			ptm_hold <- (proc.time() - ptm)[3]
 
 			predictions <- fpPredict(forest, Xt)

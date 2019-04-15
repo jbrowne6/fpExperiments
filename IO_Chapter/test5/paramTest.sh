@@ -20,20 +20,21 @@ do
 
 	Rscript createDS.R $nClass -1 -1
 	echo "done writing" >> test5.log 2>&1
-	#nSample=60000
-	nSample=6000
-	#nFeature=1024
-	nFeature=128
+	nSample=60000
+	#nSample=6000
+	nFeature=1024
+	#nFeature=128
 
 
-	for algname in "rfBase" "rerf"		
+	for algname in "binnedBase" "binnedBaseRerF"
+	#for algname in "rfBase" "rerf" "binnedBase" "binnedBaseRerF"
 	do
 		for dataset in "svhn"
 		do
 			for numCores in 16
 			do
 				echo 'skip rerf' >> test5.log 2>&1
-				#        Rscript fastRF.R $algname $dataset $numCores $nTimes $nClass $nSample $nFeature $testName >> test5.log 2>&1
+				Rscript fastRF.R $algname $dataset $numCores $nTimes $nClass $nSample $nFeature $testName >> test5.log 2>&1
 			done
 		done
 	done
@@ -44,7 +45,7 @@ do
 		for numCores in 16
 		do
 			echo 'skip XGBoost' >> test5.log 2>&1
-			#Rscript XGBoost.R $dataset $numCores $nTimes $nClass $nSample $nFeature $testName >> test5.log 2>&1
+			Rscript XGBoost.R $dataset $numCores $nTimes $nClass $nSample $nFeature $testName >> test5.log 2>&1
 		done
 	done
 
@@ -54,7 +55,7 @@ do
 		for numCores in 16
 		do
 			echo 'skip Ranger' >> test5.log 2>&1
-			#      Rscript Ranger.R $dataset $numCores $nTimes $nClass $nSample $nFeature $testName >> test5.log 2>&1
+			Rscript Ranger.R $dataset $numCores $nTimes $nClass $nSample $nFeature $testName >> test5.log 2>&1
 
 		done
 	done
@@ -72,6 +73,7 @@ do
 
 done
 
+~/.scripts/nDone.sh test5a
 
 testName="observations"
 for nSample in 30000 60000 90000 120000 150000 180000
@@ -81,17 +83,18 @@ do
 	Rscript createDS.R -1 $nSample -1
 	echo "done writing" >> test5.log 2>&1
 	nClass=5
-	#nFeature=1024
-	nFeature=128
+	nFeature=1024
+	#nFeature=128
 
-	for algname in "rfBase" "rerf"		
+	#for algname in "rfBase" "rerf"		
+	for algname in "binnedBase" "binnedBaseRerF"
 	do
 		for dataset in "svhn"
 		do
 			for numCores in 16
 			do
 				echo 'skip rerf' >> test5.log 2>&1
-				#        Rscript fastRF.R $algname $dataset $numCores $nTimes $nClass $nSample $nFeature $testName >> test5.log 2>&1
+				Rscript fastRF.R $algname $dataset $numCores $nTimes $nClass $nSample $nFeature $testName >> test5.log 2>&1
 			done
 		done
 	done
@@ -103,7 +106,7 @@ do
 		do
 
 			echo 'skip XGBoost' >> test5.log 2>&1
-			#Rscript XGBoost.R $dataset $numCores $nTimes $nClass $nSample $nFeature $testName >> test5.log 2>&1
+			Rscript XGBoost.R $dataset $numCores $nTimes $nClass $nSample $nFeature $testName >> test5.log 2>&1
 		done
 	done
 
@@ -113,7 +116,7 @@ do
 		for numCores in 16
 		do
 			echo 'skip Ranger' >> test5.log 2>&1
-			#      Rscript Ranger.R $dataset $numCores $nTimes $nClass $nSample $nFeature $testName >> test5.log 2>&1
+			Rscript Ranger.R $dataset $numCores $nTimes $nClass $nSample $nFeature $testName >> test5.log 2>&1
 
 		done
 	done
@@ -130,6 +133,7 @@ do
 
 done
 
+~/.scripts/nDone.sh test5b
 
 testName="features"
 for nFeature in 250 500 1000 1500 2250 3072
@@ -139,10 +143,11 @@ do
 	Rscript createDS.R -1 -1 $nFeature
 	echo "done writing" >> test5.log 2>&1
 	nClass=5
-	#nSample=60000
-	nSample=6000
+	nSample=60000
+	#nSample=6000
 
-	for algname in "rfBase" "rerf"
+	#for algname in "rfBase" "rerf"
+	for algname in "binnedBase" "binnedBaseRerF"
 	do
 		for dataset in "svhn"
 		do
@@ -150,7 +155,7 @@ do
 			do
 
 				echo 'skip rerf' >> test5.log 2>&1
-				#        Rscript fastRF.R $algname $dataset $numCores $nTimes $nClass $nSample $nFeature $testName >> test5.log 2>&1
+				Rscript fastRF.R $algname $dataset $numCores $nTimes $nClass $nSample $nFeature $testName >> test5.log 2>&1
 
 			done
 		done
@@ -163,7 +168,7 @@ do
 		do
 
 			echo 'skip XGBoost' >> test5.log 2>&1
-			#Rscript XGBoost.R $dataset $numCores $nTimes $nClass $nSample $nFeature $testName >> test5.log 2>&1
+			Rscript XGBoost.R $dataset $numCores $nTimes $nClass $nSample $nFeature $testName >> test5.log 2>&1
 
 		done
 	done
@@ -175,7 +180,7 @@ do
 		do
 
 			echo 'skip Ranger' >> test5.log 2>&1
-			#      Rscript Ranger.R $dataset $numCores $nTimes $nClass $nSample $nFeature $testName >> test5.log 2>&1
+			Rscript Ranger.R $dataset $numCores $nTimes $nClass $nSample $nFeature $testName >> test5.log 2>&1
 		done
 	done
 
@@ -193,4 +198,5 @@ do
 
 done
 
+~/.scripts/nDone.sh test5c
 Rscript printResults.R >> test5.log 2>&1

@@ -110,7 +110,3 @@ resultData[,5] <- as.numeric(resultData[,5])
 write.table(resultData, file="bench.csv", col.names=FALSE, row.names=FALSE, append=TRUE, sep=",", quote=FALSE)
 	}
 }
-
-
-
-

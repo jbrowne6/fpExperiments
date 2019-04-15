@@ -22,7 +22,7 @@ algorithm <- "Ranger"
 numCores <- 0
 time <- 0
 
-resultData <- data.frame(as.character(dataset), algorithm, numCores, time,time,time,time,time, stringsAsFactors=FALSE)
+resultData <- data.frame(as.character(dataset), algorithm, numCores, time,time,time,time,time,time, stringsAsFactors=FALSE)
 
 
 if(dataset=="mnist"){

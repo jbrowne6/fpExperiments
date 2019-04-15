@@ -54,7 +54,14 @@ for (p in ML){
 
 				resultData <- rbind(resultData, c("MNIST", alg,p, ptm_hold,error, 0,0)) 
 
-				forest$printParameters()
+resultData <- resultData[2:nrow(resultData),]
+resultData[,1] <- as.factor(resultData[,1])
+resultData[,2] <- as.factor(resultData[,2])
+resultData[,3] <- as.numeric(resultData[,3])
+resultData[,4] <- as.numeric(resultData[,4])
+
+write.table(resultData, file="coreGrow.csv", col.names=FALSE, row.names=FALSE, append=TRUE, sep=",", quote=FALSE)
+
 				rm(forest)
 			}
 		}
@@ -69,7 +76,7 @@ for (p in ML){
 			for (i in 1:nTimes){
 				gc()
 				ptm <- proc.time()
-				forest <- fpRerF(X =X, Y = Y, forestType=,minParent=1,numTreesInForest=num_trees,numCores=p,nodeSizeToBin=binSize, nodeSizeBin=binSize )
+				forest <- fpRerF(X =X, Y = Y, forestType=alg,minParent=1,numTreesInForest=num_trees,numCores=p,nodeSizeToBin=binSize, nodeSizeBin=binSize )
 				#forest <- fpRerF(X =X, Y = Y, forestType="rfBase",minParent=1,numTreesInForest=num_trees,numCores=p,nodeSizeToBin=binSize, nodeSizeBin=binSize )
 				ptm_hold <- (proc.time() - ptm)[3]
 
@@ -78,7 +85,13 @@ for (p in ML){
 
 				resultData <- rbind(resultData, c("MNIST", alg,p, ptm_hold,error, binSize,binSize)) 
 
-				forest$printParameters()
+resultData <- resultData[2:nrow(resultData),]
+resultData[,1] <- as.factor(resultData[,1])
+resultData[,2] <- as.factor(resultData[,2])
+resultData[,3] <- as.numeric(resultData[,3])
+resultData[,4] <- as.numeric(resultData[,4])
+
+write.table(resultData, file="coreGrow.csv", col.names=FALSE, row.names=FALSE, append=TRUE, sep=",", quote=FALSE)
 				rm(forest)
 			}
 		}
@@ -87,10 +100,4 @@ for (p in ML){
 
 
 
-resultData <- resultData[2:nrow(resultData),]
-resultData[,1] <- as.factor(resultData[,1])
-resultData[,2] <- as.factor(resultData[,2])
-resultData[,3] <- as.numeric(resultData[,3])
-resultData[,4] <- as.numeric(resultData[,4])
 
-write.table(resultData, file="coreGrow.csv", col.names=FALSE, row.names=FALSE, append=TRUE, sep=",", quote=FALSE)
