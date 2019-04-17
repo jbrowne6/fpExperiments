@@ -1,7 +1,8 @@
 #!/bin/bash
 
 mv bench.csv bench.csv.old
-nTimes=2
+rm test5.log
+nTimes=5
 #start with varying cores
 #echo "writing file"
 #Rscript createDS.R -1 -1 -1
@@ -27,7 +28,7 @@ do
 
 
 	for algname in "binnedBase" "binnedBaseRerF"
-	#for algname in "rfBase" "rerf" "binnedBase" "binnedBaseRerF"
+		#for algname in "rfBase" "rerf" "binnedBase" "binnedBaseRerF"
 	do
 		for dataset in "svhn"
 		do
@@ -76,7 +77,7 @@ done
 ~/.scripts/nDone.sh test5a
 
 testName="observations"
-for nSample in 30000 60000 90000 120000 150000 180000
+for nSample in 30000 60000 90000 140000 200000
 	#for nSample in 300 600 900 1200 1500 1800
 do
 	echo "writing file" >> test5.log 2>&1

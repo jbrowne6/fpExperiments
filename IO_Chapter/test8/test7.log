@@ -1,0 +1,63 @@
+starting fastCores
+Loading required package: Rcpp
+starting tree 1
+max depth: 46
+avg leaf node depth: 14.6285
+num leaf nodes: 643218
+starting tree 1...13...26...39...52...65...78...91...104...117
+max depth: 45
+avg depth: 14.5577
+num leaf nodes: 641563
+starting tree 1
+max depth: 43
+avg leaf node depth: 14.5886
+num leaf nodes: 643612
+starting tree 1...76...25...38...112...124
+max depth: 45
+avg depth: 14.5903
+num leaf nodes: 638586
+starting tree 1
+max depth: 48
+avg leaf node depth: 14.5869
+num leaf nodes: 642887
+starting tree 1...12...24
+max depth: 45
+avg depth: 14.597
+num leaf nodes: 638259
+starting tree 1
+max depth: 45
+avg leaf node depth: 14.686
+num leaf nodes: 642993
+starting tree 1...108
+max depth: 48
+avg depth: 14.5958
+num leaf nodes: 640861
+starting tree 1
+max depth: 48
+avg leaf node depth: 14.6123
+num leaf nodes: 644599
+starting tree 1
+max depth: 48
+avg depth: 14.5914
+num leaf nodes: 640055
+starting tree 1
+max depth: 49
+avg leaf node depth: 14.6285
+num leaf nodes: 643060
+starting tree 1
+max depth: 44
+avg depth: 14.6077
+num leaf nodes: 640179
+starting tree 1
+max depth: 46
+avg leaf node depth: 14.6461
+num leaf nodes: 646468
+starting tree 1...13...26...39...52...65...78...91...104...117
+max depth: 45
+avg depth: 14.5899
+num leaf nodes: 639776
+starting tree 1
+max depth: 49
+avg leaf node depth: 14.6053
+num leaf nodes: 646017
+starting tree 1...12...88...100

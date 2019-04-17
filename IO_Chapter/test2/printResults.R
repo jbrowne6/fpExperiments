@@ -89,10 +89,9 @@ p2 <- p2 + leg
 p2 <- p2 + scale_y_continuous(breaks=c(10,20,30,40))
 p2 <- p2 + scale_x_continuous(breaks=c(10,20,30,40))
 p2 <- p2 + facet_grid(Dataset ~ .)
+p2 <- p2 + theme(legend.position="bottom")
 
-combined <- TRUE
 
-if(combined){
 g_legend<-function(a.gplot){
 	  tmp <- ggplot_gtable(ggplot_build(a.gplot))
   leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
@@ -106,7 +105,6 @@ grid.arrange(arrangeGrob(p1 + theme(legend.position="none"), p2 + theme(legend.p
 dev.off()
 
 
-}else{
 pdf("Test2ThreadPerf.pdf")
 print(p1)
 dev.off()
@@ -114,4 +112,3 @@ dev.off()
 pdf("Test2SpeedUp.pdf")
 print(p2)
 dev.off()
-}

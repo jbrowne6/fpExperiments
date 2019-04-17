@@ -15,7 +15,7 @@ data_summary <- function(data, varname, groupnames){
 }
 
 plotText <- 20
-leg <- theme(legend.text = element_text(size = 12), legend.title=element_text(size = 18), plot.title = element_text(size = plotText,  face="bold"), plot.subtitle = element_text(size = plotText),axis.title.x = element_text(size=plotText), axis.text.x = element_text(size=plotText), axis.title.y = element_text(size=plotText), axis.text.y = element_text(size=plotText))
+leg <- theme(legend.text = element_text(size = plotText), legend.title=element_text(size = plotText), plot.title = element_text(size = plotText,  face="bold"), plot.subtitle = element_text(size = plotText),axis.title.x = element_text(size=plotText), axis.text.x = element_text(size=plotText), axis.title.y = element_text(size=plotText), axis.text.y = element_text(size=plotText))
 
 
 mydata <- read.csv(file="bench.csv", header=FALSE, sep=",")
@@ -75,9 +75,7 @@ p2 <- p2 +guides(colour = guide_legend(title.position = "top"))
 p2 <- p2 + leg
 
 
-combined <- TRUE
 
-if(combined){
 
 g_legend<-function(a.gplot){
 	  tmp <- ggplot_gtable(ggplot_build(a.gplot))
@@ -92,7 +90,6 @@ grid.arrange(arrangeGrob(p1,p2,nrow=1))
 dev.off()
 
 
-}else{
 pdf("Test3ThreadPerf.pdf")
 print(p1)
 dev.off()
@@ -100,4 +97,47 @@ dev.off()
 pdf("Test3Error.pdf")
 print(p2)
 dev.off()
+
+
+data_speedUp <- function(data, varnameTimes, varnameCores, groupnames){
+	      require(plyr)
+  summary_func <- function(x, col1, col2){
+		    oneCoreTime <- x[[col1]][x[[col2]]==1]
+	           x[[col1]] = oneCoreTime/x[[col1]]
+	    x
+			    }
+	    data_sum<-ddply(data, groupnames, .fun=summary_func, varnameTimes, varnameCores)
+	     return(data_sum)
 }
+
+
+mydata$binSize <- as.factor(mydata$binSize)
+mydata <- data_summary(mydata,varname="TrainingTime",groupnames=c("Dataset","binSize","Threads"))
+mydata <- data_speedUp(mydata,varnameTimes="TrainingTime",varnameCores="Threads",groupnames=c("Dataset","binSize"))
+
+#add ideal line
+levels(mydata$binSize) <- factor(c(levels(mydata$binSize),"Ideal"))
+for(i in unique(mydata$Threads)){
+	for(j in unique(mydata$Dataset)){
+		mydata <- rbind(mydata, c(j,"Ideal", i, i,NA))
+	}
+}
+mydata$TrainingTime <- as.numeric(mydata$TrainingTime)
+mydata$Threads <- as.numeric(mydata$Threads)
+
+p3 <- ggplot(mydata, aes(x=Threads, y=TrainingTime, group=binSize, color=binSize)) + geom_line(size=1)
+#p2 <- p2 + theme_minimal()
+p3 <- p3 + guides(fill=FALSE)
+p3 <- p3 + labs(x = "Number of Threads", y = "Speed Up")
+#p2 <- p2 + scale_color_manual(name=" ", values=c("fastRF"="#e41a1c", "fastRerF"="#377eb8", "LightGBM"="#984ea3", "Ranger"="#ff7f00", "XGBoost"="#ffff33", "RF"="#4daf4a", "Ideal"="black"))
+p3 <- p3 + leg
+p3 <- p3 + scale_y_continuous(breaks=c(10,20,30,40))
+p3 <- p3 + scale_x_continuous(breaks=c(10,20,30,40))
+#p2 <- p2 + facet_grid(Dataset ~ .)
+p3 <- p3 + theme(legend.position="bottom")
+
+pdf("Test3SpeedUp.pdf")
+print(p3)
+dev.off()
+
+

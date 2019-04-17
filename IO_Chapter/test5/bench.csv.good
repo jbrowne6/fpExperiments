@@ -1,3 +1,9 @@
+svhn,binnedBase,classes,16,15.701,6,60000,1024,1
+svhn,binnedBase,classes,16,15.543,6,60000,1024,2
+svhn,binnedBase,classes,16,16.616,7,60000,1024,1
+svhn,binnedBase,classes,16,16.603,7,60000,1024,2
+svhn,binnedBase,classes,16,17.206,8,60000,1024,1
+svhn,binnedBase,classes,16,16.759,8,60000,1024,2
 svhn,binnedBase,classes,16,13.306,2,60000,1024,1
 svhn,binnedBase,classes,16,13.152,2,60000,1024,2
 svhn,binnedBaseRerF,classes,16,11.853,2,60000,1024,1
@@ -38,8 +44,6 @@ svhn,Ranger,classes,16,24.344,5,60000,1024,1
 svhn,Ranger,classes,16,24.512,5,60000,1024,2
 svhn,LightGBM,classes,16,39.88,5,60000,1024,1
 svhn,LightGBM,classes,16,31.856,5,60000,1024,2
-svhn,binnedBase,classes,16,15.962,6,60000,1024,1
-svhn,binnedBase,classes,16,15.723,6,60000,1024,2
 svhn,binnedBaseRerF,classes,16,14.004,6,60000,1024,1
 svhn,binnedBaseRerF,classes,16,13.697,6,60000,1024,2
 svhn,XGBoost,classes,16,56.157,6,60000,1024,1
@@ -48,8 +52,6 @@ svhn,Ranger,classes,16,25.518,6,60000,1024,1
 svhn,Ranger,classes,16,25.837,6,60000,1024,2
 svhn,LightGBM,classes,16,46.205,6,60000,1024,1
 svhn,LightGBM,classes,16,37.64,6,60000,1024,2
-svhn,binnedBase,classes,16,24.478,7,60000,1024,1
-svhn,binnedBase,classes,16,24.025,7,60000,1024,2
 svhn,binnedBaseRerF,classes,16,14.606,7,60000,1024,1
 svhn,binnedBaseRerF,classes,16,14.401,7,60000,1024,2
 svhn,XGBoost,classes,16,64.188,7,60000,1024,1
@@ -58,8 +60,6 @@ svhn,Ranger,classes,16,25.782,7,60000,1024,1
 svhn,Ranger,classes,16,26.078,7,60000,1024,2
 svhn,LightGBM,classes,16,50.809,7,60000,1024,1
 svhn,LightGBM,classes,16,42.971,7,60000,1024,2
-svhn,binnedBase,classes,16,17.411,8,60000,1024,1
-svhn,binnedBase,classes,16,17.04,8,60000,1024,2
 svhn,binnedBaseRerF,classes,16,15.264,8,60000,1024,1
 svhn,binnedBaseRerF,classes,16,14.884,8,60000,1024,2
 svhn,XGBoost,classes,16,71.951,8,60000,1024,1
